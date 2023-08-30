@@ -8,5 +8,9 @@
 import UIKit
 
 final class ImagesListCell: UITableViewCell {
-    static let reuseIdentifier = String(describing: ImagesListCell.self)
+    static let reuseIdentifier = "ImagesListCell"
+
+    @IBOutlet var cellImage: UIImageView!
+    @IBOutlet var likeButton: UIButton!
+    @IBOutlet var dateLabel: UILabel!
 }
