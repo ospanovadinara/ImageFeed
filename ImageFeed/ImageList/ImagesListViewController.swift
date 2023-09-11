@@ -9,6 +9,7 @@ import UIKit
 
 final class ImagesListViewController: UIViewController {
 
+    // MARK: - UI
     @IBOutlet weak private var tableView: UITableView!
 
     private let photosName: [String] = Array(0..<20).map{ "\($0)" }
@@ -19,6 +20,7 @@ final class ImagesListViewController: UIViewController {
         return formatter
     }()
 
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.contentInset = UIEdgeInsets(top: 12,
@@ -28,6 +30,7 @@ final class ImagesListViewController: UIViewController {
 
     }
 
+    // MARK: - Cell Configuration
     func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
         guard let image = UIImage(named: photosName[indexPath.row]) else {
             return
@@ -41,6 +44,7 @@ final class ImagesListViewController: UIViewController {
         cell.likeButton.setImage(likeImage, for: .normal)    }
 }
 
+// MARK: - UITableViewDataSource
 extension ImagesListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return photosName.count
@@ -57,6 +61,7 @@ extension ImagesListViewController: UITableViewDataSource {
     }
 }
 
+// MARK: - UITableViewDelegate
 extension ImagesListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     }
