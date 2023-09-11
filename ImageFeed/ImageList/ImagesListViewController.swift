@@ -7,9 +7,10 @@
 
 import UIKit
 
-class ImagesListViewController: UIViewController {
+final class ImagesListViewController: UIViewController {
 
-    @IBOutlet private var tableView: UITableView!
+    // MARK: - UI
+    @IBOutlet weak private var tableView: UITableView!
 
     private let photosName: [String] = Array(0..<20).map{ "\($0)" }
     private lazy var dateFormatter: DateFormatter = {
@@ -19,6 +20,7 @@ class ImagesListViewController: UIViewController {
         return formatter
     }()
 
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.contentInset = UIEdgeInsets(top: 12,
@@ -27,20 +29,9 @@ class ImagesListViewController: UIViewController {
                                               right: 0)
 
     }
-
-    func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
-        guard let image = UIImage(named: photosName[indexPath.row]) else {
-            return
-        }
-
-        cell.cellImage.image = image
-        cell.dateLabel.text = dateFormatter.string(from: Date())
-
-        let isLiked = indexPath.row % 2 == 0
-        let likeImage = isLiked ? UIImage(named: "like_active") : UIImage(named: "like_not_active")
-        cell.likeButton.setImage(likeImage, for: .normal)    }
 }
 
+// MARK: - UITableViewDataSource
 extension ImagesListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return photosName.count
@@ -52,11 +43,20 @@ extension ImagesListViewController: UITableViewDataSource {
         guard let imageListCell = cell as? ImagesListCell else {
             return UITableViewCell()
         }
-        configCell(for: imageListCell, with: indexPath)
+
+        guard let image = UIImage(named: photosName[indexPath.row]) else {
+            return UITableViewCell()
+        }
+
+        let dateText = dateFormatter.string(from: Date())
+        let isLiked = indexPath.row % 2 == 0
+
+        imageListCell.configCell(image: image, dateText: dateText, isLiked: isLiked)
         return imageListCell
     }
 }
 
+// MARK: - UITableViewDelegate
 extension ImagesListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     }
