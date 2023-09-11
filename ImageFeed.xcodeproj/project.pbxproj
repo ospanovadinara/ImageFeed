@@ -14,6 +14,7 @@
 		270FAD1D2A9B748100511619 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 270FAD1B2A9B748100511619 /* Main.storyboard */; };
 		270FAD1F2A9B748200511619 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 270FAD1E2A9B748200511619 /* Assets.xcassets */; };
 		270FAD222A9B748200511619 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 270FAD202A9B748200511619 /* LaunchScreen.storyboard */; };
+		27796C452AAEFD4400212E13 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27796C442AAEFD4400212E13 /* ProfileViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		270FAD1E2A9B748200511619 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		270FAD212A9B748200511619 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		270FAD232A9B748200511619 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		27796C442AAEFD4400212E13 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,12 +72,21 @@
 				270FAD152A9B748100511619 /* AppDelegate.swift */,
 				270FAD172A9B748100511619 /* SceneDelegate.swift */,
 				270EB48B2A9F3AD300FD984D /* ImageList */,
+				27796C432AAEFD2C00212E13 /* Profile */,
 				270FAD1B2A9B748100511619 /* Main.storyboard */,
 				270FAD1E2A9B748200511619 /* Assets.xcassets */,
 				270FAD202A9B748200511619 /* LaunchScreen.storyboard */,
 				270FAD232A9B748200511619 /* Info.plist */,
 			);
 			path = ImageFeed;
+			sourceTree = "<group>";
+		};
+		27796C432AAEFD2C00212E13 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				27796C442AAEFD4400212E13 /* ProfileViewController.swift */,
+			);
+			path = Profile;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -151,6 +162,7 @@
 			files = (
 				270FAD1A2A9B748100511619 /* ImagesListViewController.swift in Sources */,
 				270EB48A2A9F3AB800FD984D /* ImagesListCell.swift in Sources */,
+				27796C452AAEFD4400212E13 /* ProfileViewController.swift in Sources */,
 				270FAD162A9B748100511619 /* AppDelegate.swift in Sources */,
 				270FAD182A9B748100511619 /* SceneDelegate.swift in Sources */,
 			);
