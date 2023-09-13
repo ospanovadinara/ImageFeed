@@ -86,14 +86,14 @@
                             <constraint firstItem="mDH-x7-xtu" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="dao-I3-8iw"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="" image="tab_editorial_active" id="Pfi-MB-VEE"/>
+                    <navigationItem key="navigationItem" id="uwY-Tu-poR"/>
                     <connections>
                         <outlet property="tableView" destination="mDH-x7-xtu" id="nd7-0G-Izb"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="9.9236641221374047" y="-34.507042253521128"/>
+            <point key="canvasLocation" x="936.64122137404581" y="-34.507042253521128"/>
         </scene>
         <!--Profile View Controller-->
         <scene sceneID="Kjw-gx-S77">
@@ -184,13 +184,37 @@
                         </tabBarAppearance>
                     </tabBar>
                     <connections>
-                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="viewControllers" id="eNP-yJ-wTV"/>
+                        <segue destination="hPn-zE-MHQ" kind="relationship" relationship="viewControllers" id="eNP-yJ-wTV"/>
                         <segue destination="aDS-T7-xHY" kind="relationship" relationship="viewControllers" id="idA-pR-Cpt"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tcZ-AV-m3t" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1106" y="358"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="OnL-km-Tar">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="hPn-zE-MHQ" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="" image="tab_editorial_active" id="Pfi-MB-VEE"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="XYD-3i-my1">
+                        <rect key="frame" x="0.0" y="59" width="393" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="barTintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <navigationBarAppearance key="standardAppearance">
+                            <color key="backgroundColor" red="0.1019607843" green="0.1058823529" blue="0.1333333333" alpha="1" colorSpace="calibratedRGB"/>
+                        </navigationBarAppearance>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="x8x-5f-LdY"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="6jB-6y-6OO" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="9.9236641221374047" y="-34.507042253521128"/>
         </scene>
     </scenes>
     <resources>
