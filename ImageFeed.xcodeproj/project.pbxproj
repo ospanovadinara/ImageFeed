@@ -43,12 +43,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		270DBA6A2AB1D7840031B13A /* SingleImageView */ = {
+			isa = PBXGroup;
+			children = (
+				270DBA682AB1CD8B0031B13A /* SingleImageViewController.swift */,
+			);
+			path = SingleImageView;
+			sourceTree = "<group>";
+		};
 		270EB48B2A9F3AD300FD984D /* ImageList */ = {
 			isa = PBXGroup;
 			children = (
 				270EB4892A9F3AB800FD984D /* ImagesListCell.swift */,
 				270FAD192A9B748100511619 /* ImagesListViewController.swift */,
-				270DBA682AB1CD8B0031B13A /* SingleImageViewController.swift */,
 			);
 			path = ImageList;
 			sourceTree = "<group>";
@@ -74,8 +81,9 @@
 			children = (
 				270FAD152A9B748100511619 /* AppDelegate.swift */,
 				270FAD172A9B748100511619 /* SceneDelegate.swift */,
-				270EB48B2A9F3AD300FD984D /* ImageList */,
 				27796C432AAEFD2C00212E13 /* Profile */,
+				270EB48B2A9F3AD300FD984D /* ImageList */,
+				270DBA6A2AB1D7840031B13A /* SingleImageView */,
 				270FAD1B2A9B748100511619 /* Main.storyboard */,
 				270FAD1E2A9B748200511619 /* Assets.xcassets */,
 				270FAD202A9B748200511619 /* LaunchScreen.storyboard */,
