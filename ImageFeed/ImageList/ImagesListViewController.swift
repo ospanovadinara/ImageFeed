@@ -63,9 +63,11 @@ extension ImagesListViewController: UITableViewDataSource {
         let dateText = dateFormatter.string(from: Date())
         let isLiked = indexPath.row % 2 == 0
 
-        imageListCell.configCell(image: image,
-                                 dateText: dateText,
-                                 isLiked: isLiked)
+        imageListCell.configCell(
+            image: image,
+            dateText: dateText,
+            isLiked: isLiked
+        )
         return imageListCell
     }
 }
@@ -73,7 +75,8 @@ extension ImagesListViewController: UITableViewDataSource {
 // MARK: - UITableViewDelegate
 extension ImagesListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: ShowSingleImageSegueIdentifier, sender: indexPath)
+        performSegue(withIdentifier: ShowSingleImageSegueIdentifier,
+                     sender: indexPath)
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

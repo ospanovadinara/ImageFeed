@@ -66,15 +66,13 @@ final class ProfileViewController: UIViewController {
     private func setupViews() {
         [nameLabel,
          userNameLabel,
-         statusLabel].forEach {
-            labelStackView.addArrangedSubview($0)
-        }
+         statusLabel
+        ].forEach { labelStackView.addArrangedSubview($0) }
 
         [avatarImage,
         exitButton,
-         labelStackView].forEach {
-            view.addSubview($0)
-        }
+         labelStackView
+        ].forEach { view.addSubview($0) }
     }
 
     // MARK: - Setup Constraints
