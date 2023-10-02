@@ -18,6 +18,7 @@ final class WebViewViewController: UIViewController {
 
     // MARK: - UI
     @IBOutlet private var webView: WKWebView!
+    @IBOutlet private var progressView: UIProgressView!
 
     weak var delegate: WebViewViewControllerDelegate?
 
@@ -66,6 +67,7 @@ extension WebViewViewController: WKNavigationDelegate {
         decisionHandler: @escaping (WKNavigationActionPolicy
         ) -> Void) {
         if let code = code(from: navigationAction) {
+            delegate?.webViewViewController(self, didAuthenticateWithCode: code)
             decisionHandler(.cancel)
         } else {
             decisionHandler(.allow)
