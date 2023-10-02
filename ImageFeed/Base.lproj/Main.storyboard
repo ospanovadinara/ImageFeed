@@ -286,7 +286,7 @@
                                 </wkWebViewConfiguration>
                             </wkWebView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="64f-PH-8F4">
-                                <rect key="frame" x="8" y="55" width="24" height="24"/>
+                                <rect key="frame" x="8" y="11" width="24" height="24"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="24" id="7gi-Qz-SeB"/>
                                     <constraint firstAttribute="height" constant="24" id="Fwx-2S-T02"/>
@@ -305,7 +305,7 @@
                             <constraint firstItem="ZZh-NX-kew" firstAttribute="leading" secondItem="Lk2-D5-I5F" secondAttribute="leading" id="CYw-RJ-Y6p"/>
                             <constraint firstItem="ZZh-NX-kew" firstAttribute="top" secondItem="Lk2-D5-I5F" secondAttribute="top" id="PGc-GE-exC"/>
                             <constraint firstItem="64f-PH-8F4" firstAttribute="leading" secondItem="Lk2-D5-I5F" secondAttribute="leading" constant="8" id="W5T-NY-Vi4"/>
-                            <constraint firstItem="64f-PH-8F4" firstAttribute="top" secondItem="Lk2-D5-I5F" secondAttribute="top" constant="55" id="iHb-sv-yrb"/>
+                            <constraint firstItem="64f-PH-8F4" firstAttribute="top" secondItem="Lk2-D5-I5F" secondAttribute="top" constant="11" id="iHb-sv-yrb"/>
                             <constraint firstItem="Lk2-D5-I5F" firstAttribute="bottom" secondItem="ZZh-NX-kew" secondAttribute="bottom" id="yYn-bx-pKq"/>
                         </constraints>
                     </view>
