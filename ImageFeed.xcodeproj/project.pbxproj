@@ -17,6 +17,7 @@
 		270FAD222A9B748200511619 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 270FAD202A9B748200511619 /* LaunchScreen.storyboard */; };
 		2723CBA32ACAAE7A00B3C040 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2723CBA22ACAAE7A00B3C040 /* Constants.swift */; };
 		2723CBA62ACAD7BF00B3C040 /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2723CBA52ACAD7BF00B3C040 /* AuthViewController.swift */; };
+		2723CBA92ACADBA400B3C040 /* WebViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2723CBA82ACADBA400B3C040 /* WebViewViewController.swift */; };
 		273CE36C2AB47B6100FFAE58 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 273CE36B2AB47B6100FFAE58 /* SnapKit */; };
 		27796C452AAEFD4400212E13 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27796C442AAEFD4400212E13 /* ProfileViewController.swift */; };
 /* End PBXBuildFile section */
@@ -34,6 +35,7 @@
 		270FAD232A9B748200511619 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2723CBA22ACAAE7A00B3C040 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		2723CBA52ACAD7BF00B3C040 /* AuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
+		2723CBA82ACADBA400B3C040 /* WebViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewViewController.swift; sourceTree = "<group>"; };
 		27796C442AAEFD4400212E13 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -112,6 +114,7 @@
 			isa = PBXGroup;
 			children = (
 				2723CBA52ACAD7BF00B3C040 /* AuthViewController.swift */,
+				2723CBA82ACADBA400B3C040 /* WebViewViewController.swift */,
 			);
 			path = Auth;
 			sourceTree = "<group>";
@@ -208,6 +211,7 @@
 				2723CBA62ACAD7BF00B3C040 /* AuthViewController.swift in Sources */,
 				2723CBA32ACAAE7A00B3C040 /* Constants.swift in Sources */,
 				270DBA692AB1CD8B0031B13A /* SingleImageViewController.swift in Sources */,
+				2723CBA92ACADBA400B3C040 /* WebViewViewController.swift in Sources */,
 				270FAD182A9B748100511619 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

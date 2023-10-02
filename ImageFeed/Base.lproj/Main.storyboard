@@ -5,6 +5,7 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -187,6 +188,29 @@
             </objects>
             <point key="canvasLocation" x="936.64122137404581" y="681.69014084507046"/>
         </scene>
+        <!--Tab Bar Controller-->
+        <scene sceneID="6iN-Vk-tOd">
+            <objects>
+                <tabBarController id="D2r-Nl-4c2" sceneMemberID="viewController">
+                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="8gw-Gt-NYZ">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="49"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <tabBarAppearance key="standardAppearance">
+                            <color key="backgroundColor" red="0.10196078431372549" green="0.10588235294117647" blue="0.13333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                            <color key="selectionIndicatorTintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </tabBarAppearance>
+                    </tabBar>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="viewControllers" id="Bay-cG-Qxw"/>
+                        <segue destination="aDS-T7-xHY" kind="relationship" relationship="viewControllers" id="MnR-44-gmo"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="tcZ-AV-m3t" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-179.38931297709922" y="357.74647887323948"/>
+        </scene>
         <!--Auth View Controller-->
         <scene sceneID="T3D-11-JPF">
             <objects>
@@ -223,6 +247,9 @@
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
                                 </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <segue destination="UaL-Mc-dYK" kind="presentation" identifier="ShowWebView" modalPresentationStyle="overFullScreen" id="DAk-Jf-GgT"/>
+                                </connections>
                             </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="2Au-IP-4aK"/>
@@ -242,28 +269,53 @@
             </objects>
             <point key="canvasLocation" x="937" y="-944"/>
         </scene>
-        <!--Tab Bar Controller-->
-        <scene sceneID="6iN-Vk-tOd">
+        <!--Web View View Controller-->
+        <scene sceneID="Bwl-H1-vVj">
             <objects>
-                <tabBarController id="D2r-Nl-4c2" sceneMemberID="viewController">
-                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="8gw-Gt-NYZ">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="49"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <tabBarAppearance key="standardAppearance">
-                            <color key="backgroundColor" red="0.10196078431372549" green="0.10588235294117647" blue="0.13333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                            <color key="selectionIndicatorTintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        </tabBarAppearance>
-                    </tabBar>
+                <viewController id="UaL-Mc-dYK" customClass="WebViewViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="wOD-pZ-8et">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZZh-NX-kew">
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <wkWebViewConfiguration key="configuration">
+                                    <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
+                                    <wkPreferences key="preferences"/>
+                                </wkWebViewConfiguration>
+                            </wkWebView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="64f-PH-8F4">
+                                <rect key="frame" x="8" y="55" width="24" height="24"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="24" id="7gi-Qz-SeB"/>
+                                    <constraint firstAttribute="height" constant="24" id="Fwx-2S-T02"/>
+                                </constraints>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" title="Button" image="nav_back_button"/>
+                                <connections>
+                                    <action selector="didTapBackButton:" destination="UaL-Mc-dYK" eventType="touchUpInside" id="7Ea-hk-0dr"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="Lk2-D5-I5F"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="Lk2-D5-I5F" firstAttribute="trailing" secondItem="ZZh-NX-kew" secondAttribute="trailing" id="1Rj-vm-6DY"/>
+                            <constraint firstItem="ZZh-NX-kew" firstAttribute="leading" secondItem="Lk2-D5-I5F" secondAttribute="leading" id="CYw-RJ-Y6p"/>
+                            <constraint firstItem="ZZh-NX-kew" firstAttribute="top" secondItem="Lk2-D5-I5F" secondAttribute="top" id="PGc-GE-exC"/>
+                            <constraint firstItem="64f-PH-8F4" firstAttribute="leading" secondItem="Lk2-D5-I5F" secondAttribute="leading" constant="8" id="W5T-NY-Vi4"/>
+                            <constraint firstItem="64f-PH-8F4" firstAttribute="top" secondItem="Lk2-D5-I5F" secondAttribute="top" constant="55" id="iHb-sv-yrb"/>
+                            <constraint firstItem="Lk2-D5-I5F" firstAttribute="bottom" secondItem="ZZh-NX-kew" secondAttribute="bottom" id="yYn-bx-pKq"/>
+                        </constraints>
+                    </view>
                     <connections>
-                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="viewControllers" id="Bay-cG-Qxw"/>
-                        <segue destination="aDS-T7-xHY" kind="relationship" relationship="viewControllers" id="MnR-44-gmo"/>
+                        <outlet property="webView" destination="ZZh-NX-kew" id="tlC-7E-7Q7"/>
                     </connections>
-                </tabBarController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="tcZ-AV-m3t" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="4EL-md-GvR" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-179.38931297709922" y="357.74647887323948"/>
+            <point key="canvasLocation" x="1859" y="-944"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="XFi-MS-jr2">
@@ -289,8 +341,12 @@
         <image name="auth_screen_logo" width="60" height="60"/>
         <image name="backward_icon" width="24" height="24"/>
         <image name="like_active" width="44" height="44"/>
+        <image name="nav_back_button" width="24" height="24"/>
         <image name="share_icon" width="51" height="50"/>
         <image name="tab_editorial_active" width="30" height="30"/>
         <image name="tab_profile_active" width="30" height="30"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
     </resources>
 </document>
