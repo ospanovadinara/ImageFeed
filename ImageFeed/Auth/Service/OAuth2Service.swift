@@ -54,10 +54,12 @@ final class OAuth2Service {
                     completion(.failure(NetworkError.invalidStatusCode))
                     return
                 }
-                
+
+                let decoder = JSONDecoder()
+                decoder.keyDecodingStrategy = .convertFromSnakeCase
                 if let data = data {
                     do {
-                        let responseBody = try JSONDecoder().decode(OAuthTokenResponseBody.self, from: data)
+                        let responseBody = try decoder.decode(OAuthTokenResponseBody.self, from: data)
                         completion(.success(responseBody.accessToken))
                     } catch {
                         completion(.failure(error))
