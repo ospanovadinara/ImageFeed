@@ -1,36 +1,36 @@
 //
-//  OAuth2Service.swift
+//  ProfileService.swift
 //  ImageFeed
 //
-//  Created by Dinara on 03.10.2023.
+//  Created by Dinara on 11.10.2023.
 //
 
 import Foundation
 
-final class OAuth2Service {
-    static let shared = OAuth2Service()
+final class ProfileService {
+    static let shared = ProfileService()
     private let session = URLSession.shared
     private var task: URLSessionTask?
-    private var lastCode: String?
+    private var authToken = OAuth2TokenStorage.shared.token
+    private(set) var profile: Profile?
 
-    private init() {}
+    init() {}
 
-    func fetchAuthToken(_ code: String,
-                        completion: @escaping (Result<String, Error>) -> Void) {
-
+    func fetchProfile(_ token: String,
+                      completion: @escaping (Result <Profile, Error>) -> Void) {
         assert(Thread.isMainThread)
-        if lastCode == code { return }
+        if authToken == token { return }
         task?.cancel()
-        lastCode = code
-
-        let request = makeRequest(code: code)
+        authToken = token
+        
+        let request = makeRequest(token: authToken ?? "")
         let task = session.dataTask(with: request) { data, response, error in
             DispatchQueue.main.async {
                 if let error = error {
                     completion(.failure(error))
                     return
                 }
-                
+
                 //Проверяем значение HTTP-кода
                 guard let httpResponse = response as? HTTPURLResponse,
                       (200..<300).contains(httpResponse.statusCode) else {
@@ -38,16 +38,18 @@ final class OAuth2Service {
                     return
                 }
 
-                let decoder = JSONDecoder()
-                decoder.keyDecodingStrategy = .convertFromSnakeCase
                 if let data = data {
+                    let decoder = JSONDecoder()
+                    decoder.keyDecodingStrategy = .convertFromSnakeCase
                     do {
-                        let responseBody = try decoder.decode(OAuthTokenResponseBody.self, from: data)
-                        completion(.success(responseBody.accessToken))
-                        self.task = nil
-                        if error != nil {
-                            self.lastCode = nil
-                        }
+                        let profileResult = try decoder.decode(ProfileResult.self, from: data)
+                        let loginName = "@" + profileResult.username
+                        let name = "\(profileResult.firstName) \(profileResult.lastName)"
+                        let profile = Profile(username: profileResult.username,
+                                              name: name,
+                                              loginName: loginName,
+                                              bio: profileResult.bio ?? "")
+                        completion(.success(profile))
                     } catch {
                         completion(.failure(error))
                     }
@@ -56,16 +58,15 @@ final class OAuth2Service {
                 }
             }
         }
-        self.task = task
         task.resume()
     }
 
-    private func makeRequest(code: String) -> URLRequest {
+    private func makeRequest(token: String) -> URLRequest {
         //Создание URL c использованием URLComponents
         var urlComponents = URLComponents()
         urlComponents.scheme = "https"
-        urlComponents.host = "unsplash.com"
-        urlComponents.path = "/oauth/token"
+        urlComponents.host = "api.unsplash.com"
+        urlComponents.path = "/users/me"
 
         guard let url = urlComponents.url else {
             fatalError("Failed to create URL")
@@ -75,17 +76,8 @@ final class OAuth2Service {
         var request = URLRequest(url: url)
 
         //Создание HTTP-метода
-        request.httpMethod = "POST"
+        request.httpMethod = "GET"
 
-        let bodyParameters = [
-            "client_id": AccessKey,
-            "client_secret": SecretKey,
-            "redirect_uri": RedirectURI,
-            "code": code,
-            "grant_type": "authorization_code"
-        ]
-
-        request.httpBody = try? JSONSerialization.data(withJSONObject: bodyParameters)
         if let token = OAuth2TokenStorage.shared.token {
             request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
 

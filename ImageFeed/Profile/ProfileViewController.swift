@@ -9,6 +9,7 @@ import UIKit
 import SnapKit
 
 final class ProfileViewController: UIViewController {
+    private let profileService = ProfileService.shared
 
     // MARK: - UI
     private lazy var avatarImage: UIImageView = {
@@ -60,6 +61,7 @@ final class ProfileViewController: UIViewController {
         super.viewDidLoad()
         setupViews()
         setupConstraints()
+        updateProfileDetails(profile: profile)
     }
 
     // MARK: - Setup Views
@@ -94,6 +96,15 @@ final class ProfileViewController: UIViewController {
             make.leading.equalToSuperview().offset(16)
         }
     }
+
+    private func updateProfileDetails(profile: Profile) {
+        if let profile = profileService.profile {
+            nameLabel.text = profile.name
+            userNameLabel.text = profile.loginName
+            statusLabel.text = profile.bio
+        }
+    }
+
 
     // MARK: - Actions
     @objc private func exitButtonDidTap() {

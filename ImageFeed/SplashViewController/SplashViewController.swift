@@ -14,6 +14,8 @@ final class SplashViewController: UIViewController {
 
     private let oauth2Service = OAuth2Service.shared
     private let oauth2TokenStorage = OAuth2TokenStorage.shared
+    private let profileService = ProfileService.shared
+    private var profile: Profile?
 
     // MARK: - Lifecycle
     override func viewDidAppear(_ animated: Bool) {
@@ -61,9 +63,9 @@ extension SplashViewController {
 // MARK: - AuthViewControllerDelegate
 extension SplashViewController: AuthViewControllerDelegate {
     func authViewController(_ vc: AuthViewController, didAuthenticateWithCode code: String) {
-        ProgressHUD.show()
         dismiss(animated: true) { [weak self] in
             guard let self = self else { return }
+            UIBlockingProgressHUD.show()
             self.fetchOAuthToken(code)
         }
     }
@@ -73,12 +75,28 @@ extension SplashViewController: AuthViewControllerDelegate {
             guard let self = self else { return }
             switch result {
             case .success(let token):
-                oauth2TokenStorage.token = token
-                self.switchToTabBarController()
-                ProgressHUD.dismiss()
+                self.fetchProfile(token: token)
+                UIBlockingProgressHUD.dismiss()
             case .failure(let error):
-                ProgressHUD.dismiss()
+                UIBlockingProgressHUD.dismiss()
                 print("Error fetching auth token: \(error)")
+                break
+            }
+        }
+    }
+
+    private func fetchProfile(token:String) {
+        profileService.fetchProfile(token) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let profile):
+                self.profile = profile
+                UIBlockingProgressHUD.dismiss()
+                self.switchToTabBarController()
+            case .failure:
+                UIBlockingProgressHUD.dismiss()
+                
+                break
             }
         }
     }
