@@ -22,6 +22,7 @@
 		2723CBA32ACAAE7A00B3C040 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2723CBA22ACAAE7A00B3C040 /* Constants.swift */; };
 		2723CBA62ACAD7BF00B3C040 /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2723CBA52ACAD7BF00B3C040 /* AuthViewController.swift */; };
 		2723CBA92ACADBA400B3C040 /* WebViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2723CBA82ACADBA400B3C040 /* WebViewViewController.swift */; };
+		2735A79C2AD6708900B6D43C /* ProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 2735A79B2AD6708900B6D43C /* ProgressHUD */; };
 		273CE36C2AB47B6100FFAE58 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 273CE36B2AB47B6100FFAE58 /* SnapKit */; };
 		27796C452AAEFD4400212E13 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27796C442AAEFD4400212E13 /* ProfileViewController.swift */; };
 		27C4CD612ACD84BD006D4EC4 /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C4CD602ACD84BD006D4EC4 /* NetworkError.swift */; };
@@ -55,6 +56,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				273CE36C2AB47B6100FFAE58 /* SnapKit in Frameworks */,
+				2735A79C2AD6708900B6D43C /* ProgressHUD in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -184,6 +186,7 @@
 			name = ImageFeed;
 			packageProductDependencies = (
 				273CE36B2AB47B6100FFAE58 /* SnapKit */,
+				2735A79B2AD6708900B6D43C /* ProgressHUD */,
 			);
 			productName = ImageFeed;
 			productReference = 270FAD122A9B748100511619 /* ImageFeed.app */;
@@ -215,6 +218,7 @@
 			mainGroup = 270FAD092A9B748100511619;
 			packageReferences = (
 				273CE36A2AB47B6100FFAE58 /* XCRemoteSwiftPackageReference "SnapKit" */,
+				2735A79A2AD6708900B6D43C /* XCRemoteSwiftPackageReference "ProgressHUD" */,
 			);
 			productRefGroup = 270FAD132A9B748100511619 /* Products */;
 			projectDirPath = "";
@@ -484,6 +488,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		2735A79A2AD6708900B6D43C /* XCRemoteSwiftPackageReference "ProgressHUD" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/relatedcode/ProgressHUD";
+			requirement = {
+				kind = exactVersion;
+				version = 13.8.4;
+			};
+		};
 		273CE36A2AB47B6100FFAE58 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
@@ -495,6 +507,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		2735A79B2AD6708900B6D43C /* ProgressHUD */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2735A79A2AD6708900B6D43C /* XCRemoteSwiftPackageReference "ProgressHUD" */;
+			productName = ProgressHUD;
+		};
 		273CE36B2AB47B6100FFAE58 /* SnapKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 273CE36A2AB47B6100FFAE58 /* XCRemoteSwiftPackageReference "SnapKit" */;
