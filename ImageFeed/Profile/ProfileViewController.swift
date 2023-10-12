@@ -61,7 +61,10 @@ final class ProfileViewController: UIViewController {
         super.viewDidLoad()
         setupViews()
         setupConstraints()
-        updateProfileDetails(profile: profile)
+        updateProfileDetails(profile: profileService.profile ?? Profile(username: "",
+                                                                        name: "",
+                                                                        loginName: "",
+                                                                        bio: ""))
     }
 
     // MARK: - Setup Views
