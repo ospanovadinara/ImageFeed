@@ -17,6 +17,9 @@ final class SplashViewController: UIViewController {
     private let profileService = ProfileService.shared
     private var profile: Profile?
 
+    private let profileImageService = ProfileImageService.shared
+
+
     // MARK: - Lifecycle
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -43,6 +46,15 @@ final class SplashViewController: UIViewController {
         let tabBarController = UIStoryboard(name: "Main", bundle: .main)
             .instantiateViewController(withIdentifier: "TabBarViewController")
         window.rootViewController = tabBarController
+
+        fetchProfileImageURL()
+    }
+
+    private func fetchProfileImageURL() {
+        guard let username = profile?.username else { return }
+
+        profileImageService.fetchProfileImageURL(username: username) { _ in
+        }
     }
 }
 

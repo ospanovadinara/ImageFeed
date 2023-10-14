@@ -1,36 +1,36 @@
 //
-//  OAuth2Service.swift
+//  ProfileImageService.swift
 //  ImageFeed
 //
-//  Created by Dinara on 03.10.2023.
+//  Created by Dinara on 14.10.2023.
 //
 
 import Foundation
 
-final class OAuth2Service {
-    static let shared = OAuth2Service()
+final class ProfileImageService {
+
+    static let shared = ProfileImageService()
+    private (set) var avatarURL: String?
     private let session = URLSession.shared
     private var task: URLSessionTask?
-    private var lastCode: String?
-
-    private init() {}
-
-    func fetchAuthToken(_ code: String,
-                        completion: @escaping (Result<String, Error>) -> Void) {
-
+    private var lastUserName: String?
+    static let DidChangeNotification = Notification.Name(rawValue: "ProfileImageProviderDidChange")
+    
+    func fetchProfileImageURL(username: String,
+                              _ completion: @escaping (Result<String, Error>) -> Void) {
         assert(Thread.isMainThread)
-        if lastCode == code { return }
+        if lastUserName == username { return }
         task?.cancel()
-        lastCode = code
+        lastUserName = username
 
-        let request = makeRequest(code: code)
+        let request = makeRequest(username: username)
         let task = session.dataTask(with: request) { data, response, error in
             DispatchQueue.main.async {
                 if let error = error {
                     completion(.failure(error))
                     return
                 }
-                
+
                 //Проверяем значение HTTP-кода
                 guard let httpResponse = response as? HTTPURLResponse,
                       (200..<300).contains(httpResponse.statusCode)
@@ -40,16 +40,20 @@ final class OAuth2Service {
                     print("Error: \(String(describing: httpResponse?.statusCode))")
                     return
                 }
-
                 let decoder = JSONDecoder()
                 decoder.keyDecodingStrategy = .convertFromSnakeCase
                 if let data = data {
                     do {
-                        let responseBody = try decoder.decode(OAuthTokenResponseBody.self, from: data)
-                        completion(.success(responseBody.accessToken))
+                        let userResult = try decoder.decode(UserResult.self, from: data)
+                        if let avatarURL = self.avatarURL {
+                            completion(.success(avatarURL))
+                            return
+                        }
+                        self.avatarURL = userResult.profileImage.small
+                        completion(.success(userResult.profileImage.small))
                         self.task = nil
                         if error != nil {
-                            self.lastCode = nil
+                            self.lastUserName = nil
                         }
                     } catch {
                         completion(.failure(error))
@@ -57,38 +61,34 @@ final class OAuth2Service {
                 } else {
                     completion(.failure(NetworkError.noData))
                 }
+                NotificationCenter.default
+                    .post(
+                        name: ProfileImageService.DidChangeNotification,
+                        object: self,
+                        userInfo: ["URL": self.avatarURL ?? ""])
             }
         }
         self.task = task
         task.resume()
     }
 
-    private func makeRequest(code: String) -> URLRequest {
+    private func makeRequest(username: String) -> URLRequest {
         //Создание URL c использованием URLComponents
         var urlComponents = URLComponents()
         urlComponents.scheme = "https"
         urlComponents.host = "unsplash.com"
-        urlComponents.path = "/oauth/token"
+        urlComponents.path = "/users/\(username)"
 
         guard let url = urlComponents.url else {
-            fatalError("Failed to create URL")
+            fatalError("Failed to create Avatar URL")
         }
 
         //Создание HTTP-запроса
         var request = URLRequest(url: url)
 
         //Создание HTTP-метода
-        request.httpMethod = "POST"//это разве POST? перепроверить
+        request.httpMethod = "GET"
 
-        let bodyParameters = [
-            "client_id": AccessKey,
-            "client_secret": SecretKey,
-            "redirect_uri": RedirectURI,
-            "code": code,
-            "grant_type": "authorization_code"
-        ]
-
-        request.httpBody = try? JSONSerialization.data(withJSONObject: bodyParameters)
         if let token = OAuth2TokenStorage.shared.token {
             request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
 

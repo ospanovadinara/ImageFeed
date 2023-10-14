@@ -53,7 +53,7 @@ struct ProfileResult: Codable {
     let badge: Badge
 
     struct Links: Codable {
-        let selfLink: String
+        let `self`: String
         let html: String
         let photos: String
         let likes: String

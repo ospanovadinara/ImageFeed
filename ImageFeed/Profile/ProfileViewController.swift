@@ -10,6 +10,8 @@ import SnapKit
 
 final class ProfileViewController: UIViewController {
     private let profileService = ProfileService.shared
+    private var authToken = OAuth2TokenStorage.shared.token
+    private var profileImageServiceObserver: NSObjectProtocol?
 
     // MARK: - UI
     private lazy var avatarImage: UIImageView = {
@@ -61,10 +63,18 @@ final class ProfileViewController: UIViewController {
         super.viewDidLoad()
         setupViews()
         setupConstraints()
-        updateProfileDetails(profile: profileService.profile ?? Profile(username: "",
-                                                                        name: "",
-                                                                        loginName: "",
-                                                                        bio: ""))
+        fetchProfile()
+        profileImageServiceObserver = NotificationCenter.default
+                   .addObserver(
+                       forName: ProfileImageService.DidChangeNotification,
+                       object: nil,
+                       queue: .main
+                   ) { [weak self] _ in
+                       guard let self = self else { return }
+                       self.updateAvatar()
+                   }
+               updateAvatar()
+        updateAvatar()
     }
 
     // MARK: - Setup Views
@@ -100,14 +110,30 @@ final class ProfileViewController: UIViewController {
         }
     }
 
-    private func updateProfileDetails(profile: Profile) {
-        if let profile = profileService.profile {
-            nameLabel.text = profile.name
-            userNameLabel.text = profile.loginName
-            statusLabel.text = profile.bio
+    private func updateAvatar() {
+        guard
+            let profileImageURL = ProfileImageService.shared.avatarURL,
+            let url = URL(string: profileImageURL)
+        else { return }
+        // TODO [Sprint 11] Обновить аватар, используя Kingfisher
+    }
+
+    private func fetchProfile() {
+        profileService.fetchProfile(authToken ?? "") { result in
+            switch result {
+            case .success(let profile):
+                self.updateProfileDetails(profile: profile)
+            case .failure(let error):
+                print("Error fetching profile: \(error)")
+            }
         }
     }
 
+    private func updateProfileDetails(profile: Profile) {
+            nameLabel.text = profile.name
+            userNameLabel.text = profile.loginName
+            statusLabel.text = profile.bio
+    }
 
     // MARK: - Actions
     @objc private func exitButtonDidTap() {
