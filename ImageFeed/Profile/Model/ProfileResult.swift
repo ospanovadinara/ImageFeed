@@ -53,7 +53,7 @@ struct ProfileResult: Codable {
     let badge: Badge
 
     struct Links: Codable {
-        let `self`: String
+        let selfLink: String
         let html: String
         let photos: String
         let likes: String
@@ -61,4 +61,8 @@ struct ProfileResult: Codable {
     }
 
     let links: Links
+}
+
+enum CodingKeys: String, CodingKey {
+    case selfLink = "self"
 }

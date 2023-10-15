@@ -7,11 +7,14 @@
 
 import UIKit
 import SnapKit
+import Kingfisher
 
 final class ProfileViewController: UIViewController {
     private let profileService = ProfileService.shared
     private var authToken = OAuth2TokenStorage.shared.token
     private var profileImageServiceObserver: NSObjectProtocol?
+    private var profile: Profile?
+    private let profileImageService = ProfileImageService.shared
 
     // MARK: - UI
     private lazy var avatarImage: UIImageView = {
@@ -113,9 +116,37 @@ final class ProfileViewController: UIViewController {
     private func updateAvatar() {
         guard
             let profileImageURL = ProfileImageService.shared.avatarURL,
-            let url = URL(string: profileImageURL)
+            let _ = URL(string: profileImageURL)
         else { return }
-        // TODO [Sprint 11] Обновить аватар, используя Kingfisher
+        let downloader = ImageDownloader.default
+        let imageView = UIImageView()
+        guard let username = profile?.username else { return }
+        profileImageService.fetchProfileImageURL(username: username) { _ in
+        }
+        let imageUrlPath = "https://unsplash.com/\(username)/profile"
+        let imageUrl = URL(string: imageUrlPath)
+
+        let processor = RoundCornerImageProcessor(cornerRadius: 20)
+        imageView.kf.indicatorType = .activity
+
+        imageView.kf.setImage(with: imageUrl,
+                              placeholder: UIImage(named: "placeholder.jpeg"),
+                              options: [
+                                .processor(processor)
+                              ]) { result in
+                                  switch result {
+                                  case .success(let value):
+                                      print(value.image)
+                                      print(value.cacheType)
+                                      print(value.source)
+                                  case .failure(let error):
+                                      print(error)
+                                  }
+                              }
+
+        let cache = ImageCache.default
+        cache.clearMemoryCache()
+        cache.clearDiskCache()
     }
 
     private func fetchProfile() {

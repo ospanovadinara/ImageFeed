@@ -78,7 +78,7 @@ final class OAuth2Service {
         var request = URLRequest(url: url)
 
         //Создание HTTP-метода
-        request.httpMethod = "POST"//это разве POST? перепроверить
+        request.httpMethod = "POST"
 
         let bodyParameters = [
             "client_id": AccessKey,
