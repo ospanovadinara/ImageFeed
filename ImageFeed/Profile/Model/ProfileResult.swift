@@ -17,7 +17,7 @@ struct ProfileResult: Codable {
     let instagramUsername: String?
     let twitterUsername: String?
     let portfolioUrl: String?
-    let bio: String?
+    let bio: String
     let location: String?
     let totalLikes: Int
     let totalPhotos: Int

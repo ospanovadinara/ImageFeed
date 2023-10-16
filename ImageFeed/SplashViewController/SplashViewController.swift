@@ -24,7 +24,7 @@ final class SplashViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        if let _ = oauth2TokenStorage.token {
+        if let token = oauth2TokenStorage.token {
             switchToTabBarController()
         } else {
             performSegue(withIdentifier: ShowAuthenticationScreenSegueIdentifier,
@@ -75,9 +75,9 @@ extension SplashViewController {
 // MARK: - AuthViewControllerDelegate
 extension SplashViewController: AuthViewControllerDelegate {
     func authViewController(_ vc: AuthViewController, didAuthenticateWithCode code: String) {
+        UIBlockingProgressHUD.show()
         dismiss(animated: true) { [weak self] in
             guard let self = self else { return }
-            UIBlockingProgressHUD.show()
             self.fetchOAuthToken(code)
         }
     }
@@ -88,26 +88,29 @@ extension SplashViewController: AuthViewControllerDelegate {
             switch result {
             case .success(let token):
                 self.fetchProfile(token: token)
-                UIBlockingProgressHUD.dismiss()
+//                case .success:
+//                self.switchToTabBarController()
             case .failure(let error):
                 UIBlockingProgressHUD.dismiss()
+                // TODO [Sprint 11] Показать ошибку
                 print("Error fetching auth token: \(error)")
                 break
             }
         }
     }
 
-    private func fetchProfile(token:String) {
+    private func fetchProfile(token: String) {
         profileService.fetchProfile(token) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let profile):
-                self.profile = profile
                 UIBlockingProgressHUD.dismiss()
-                self.switchToTabBarController()
+                self.profile = profile
+                self.fetchProfileImageURL()
+//                self.switchToTabBarController()
             case .failure:
                 UIBlockingProgressHUD.dismiss()
-                
+                // TODO [Sprint 11] Показать ошибку
                 break
             }
         }

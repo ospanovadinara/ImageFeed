@@ -22,8 +22,9 @@ final class ProfileService {
         if authToken == token { return }
         task?.cancel()
         authToken = token
-        
-        let request = makeRequest(token: authToken ?? "")
+
+        guard let authToken = authToken else { return }
+        let request = makeRequest(token: authToken)
         let task = session.dataTask(with: request) { data, response, error in
             DispatchQueue.main.async {
                 if let error = error {
@@ -32,29 +33,35 @@ final class ProfileService {
                 }
 
                 //Проверяем значение HTTP-кода
-                guard let httpResponse = response as? HTTPURLResponse,
-                      (200..<300).contains(httpResponse.statusCode) else {
+                guard let httpResponse = response as? HTTPURLResponse else {
+                    let httpResponse = response as? HTTPURLResponse
                     completion(.failure(NetworkError.invalidStatusCode))
+                    print("Error fetching Profile: \(String(describing: httpResponse?.statusCode))")
                     return
                 }
 
-                if let data = data {
-                    let decoder = JSONDecoder()
-                    decoder.keyDecodingStrategy = .convertFromSnakeCase
-                    do {
-                        let profileResult = try decoder.decode(ProfileResult.self, from: data)
-                        let loginName = "@" + profileResult.username
-                        let name = "\(profileResult.firstName) \(profileResult.lastName)"
-                        let profile = Profile(username: profileResult.username,
-                                              name: name,
-                                              loginName: loginName,
-                                              bio: profileResult.bio ?? "")
-                        completion(.success(profile))
-                    } catch {
-                        completion(.failure(error))
+                if httpResponse.statusCode == 401 {
+                    completion(.failure(NetworkError.unauthorized))
+                    return
+                } else if (200..<300).contains(httpResponse.statusCode) {
+                    if let data = data {
+                        let decoder = JSONDecoder()
+                        decoder.keyDecodingStrategy = .convertFromSnakeCase
+                        do {
+                            let profileResult = try decoder.decode(ProfileResult.self, from: data)
+                            let loginName = "@" + profileResult.username
+                            let name = "\(profileResult.firstName) \(profileResult.lastName)"
+                            let profile = Profile(username: profileResult.username,
+                                                  name: name,
+                                                  loginName: loginName,
+                                                  bio: profileResult.bio)
+                            completion(.success(profile))
+                        } catch {
+                            completion(.failure(error))
+                        }
+                    } else {
+                        completion(.failure(NetworkError.noData))
                     }
-                } else {
-                    completion(.failure(NetworkError.noData))
                 }
             }
         }

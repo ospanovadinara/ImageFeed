@@ -66,18 +66,19 @@ final class ProfileViewController: UIViewController {
         super.viewDidLoad()
         setupViews()
         setupConstraints()
-        fetchProfile()
+        updateProfileDetails(profile: profileService.profile ?? Profile.init(username: "",
+                                                                             name: "",
+                                                                             loginName: "",
+                                                                             bio: ""))
         profileImageServiceObserver = NotificationCenter.default
-                   .addObserver(
-                       forName: ProfileImageService.DidChangeNotification,
-                       object: nil,
-                       queue: .main
-                   ) { [weak self] _ in
-                       guard let self = self else { return }
-                       self.updateAvatar()
-                   }
-               updateAvatar()
-        updateAvatar()
+            .addObserver(
+                forName: ProfileImageService.DidChangeNotification,
+                object: nil,
+                queue: .main
+            ) { [weak self] _ in
+                guard let self = self else { return }
+                self.updateAvatar()
+            }
     }
 
     // MARK: - Setup Views
@@ -147,17 +148,6 @@ final class ProfileViewController: UIViewController {
         let cache = ImageCache.default
         cache.clearMemoryCache()
         cache.clearDiskCache()
-    }
-
-    private func fetchProfile() {
-        profileService.fetchProfile(authToken ?? "") { result in
-            switch result {
-            case .success(let profile):
-                self.updateProfileDetails(profile: profile)
-            case .failure(let error):
-                print("Error fetching profile: \(error)")
-            }
-        }
     }
 
     private func updateProfileDetails(profile: Profile) {

@@ -70,6 +70,16 @@ final class OAuth2Service {
         urlComponents.host = "unsplash.com"
         urlComponents.path = "/oauth/token"
 
+        let queryItems = [
+            URLQueryItem(name: "client_id", value: AccessKey),
+            URLQueryItem(name: "client_secret", value: SecretKey),
+            URLQueryItem(name: "redirect_uri", value: RedirectURI),
+            URLQueryItem(name: "code", value: code),
+            URLQueryItem(name: "grant_type", value: "authorization_code"),
+        ]
+
+        urlComponents.queryItems = queryItems
+
         guard let url = urlComponents.url else {
             fatalError("Failed to create URL")
         }
@@ -79,20 +89,7 @@ final class OAuth2Service {
 
         //Создание HTTP-метода
         request.httpMethod = "POST"
-
-        let bodyParameters = [
-            "client_id": AccessKey,
-            "client_secret": SecretKey,
-            "redirect_uri": RedirectURI,
-            "code": code,
-            "grant_type": "authorization_code"
-        ]
-
-        request.httpBody = try? JSONSerialization.data(withJSONObject: bodyParameters)
-        if let token = OAuth2TokenStorage.shared.token {
-            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-
-        }
+        
         return request
     }
 }
