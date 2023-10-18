@@ -5,7 +5,7 @@
 //  Created by Dinara on 03.10.2023.
 //
 
-import Foundation
+import UIKit
 
 final class OAuth2Service {
     static let shared = OAuth2Service()
@@ -24,43 +24,23 @@ final class OAuth2Service {
         lastCode = code
 
         let request = makeRequest(code: code)
-        let task = session.dataTask(with: request) { data, response, error in
-            DispatchQueue.main.async {
-                if let error = error {
-                    completion(.failure(error))
-                    return
-                }
-                
-                //Проверяем значение HTTP-кода
-                guard let httpResponse = response as? HTTPURLResponse,
-                      (200..<300).contains(httpResponse.statusCode)
-                else {
-                    let httpResponse = response as? HTTPURLResponse
-                    completion(.failure(NetworkError.invalidStatusCode))
-                    print("Error: \(String(describing: httpResponse?.statusCode))")
-                    return
-                }
-
-                let decoder = JSONDecoder()
-                decoder.keyDecodingStrategy = .convertFromSnakeCase
-                if let data = data {
-                    do {
-                        let responseBody = try decoder.decode(OAuthTokenResponseBody.self, from: data)
-                        completion(.success(responseBody.accessToken))
-                        self.task = nil
-                        if error != nil {
-                            self.lastCode = nil
-                        }
-                    } catch {
-                        completion(.failure(error))
-                    }
-                } else {
-                    completion(.failure(NetworkError.noData))
-                }
+        task = session.objectTask(for: request) { [weak self] (result: Result<OAuthTokenResponseBody, Error>) in
+            switch result {
+            case .success(let responseBody):
+                self?.handleSuccessfulResponse(responseBody)
+            case .failure(let error):
+                fatalError("Error: \(error)")
+            }
+            if let task = self?.task {
+                task.resume()
+            } else {
+                print("Error unwrapping task")
             }
         }
-        self.task = task
-        task.resume()
+    }
+
+    func handleSuccessfulResponse(_ responseBody: OAuthTokenResponseBody) {
+        UserDefaults.standard.set(responseBody.accessToken, forKey: "accessToken")
     }
 
     private func makeRequest(code: String) -> URLRequest {
@@ -89,7 +69,47 @@ final class OAuth2Service {
 
         //Создание HTTP-метода
         request.httpMethod = "POST"
-        
+
         return request
+    }
+}
+
+extension URLSession {
+    func objectTask<T: Decodable>(
+        for request: URLRequest,
+        completion: @escaping (Result<T, Error>) -> Void
+    ) -> URLSessionDataTask {
+        let task = dataTask(with: request) { data, response, error in
+            DispatchQueue.main.async {
+                if let error = error {
+                    completion(.failure(error))
+                    return
+                }
+
+                guard let httpResponse = response as? HTTPURLResponse,
+                      (200..<300).contains(httpResponse.statusCode)
+                else {
+                    let httpResponse = response as? HTTPURLResponse
+                    completion(.failure(NetworkError.invalidStatusCode))
+                    print("Error: \(String(describing: httpResponse?.statusCode))")
+                    return
+                }
+
+                let decoder = JSONDecoder()
+                decoder.keyDecodingStrategy = .convertFromSnakeCase
+                if let data = data {
+                    do {
+                        let responseBody = try decoder.decode(T.self, from: data)
+                        completion(.success(responseBody))
+                    } catch {
+                        completion(.failure(error))
+                    }
+                } else {
+                    completion(.failure(NetworkError.noData))
+                }
+            }
+        }
+        task.resume()
+        return task
     }
 }

@@ -25,47 +25,25 @@ final class ProfileService {
 
         guard let authToken = authToken else { return }
         let request = makeRequest(token: authToken)
-        let task = session.dataTask(with: request) { data, response, error in
-            DispatchQueue.main.async {
-                if let error = error {
-                    completion(.failure(error))
-                    return
-                }
-
-                //Проверяем значение HTTP-кода
-                guard let httpResponse = response as? HTTPURLResponse else {
-                    let httpResponse = response as? HTTPURLResponse
-                    completion(.failure(NetworkError.invalidStatusCode))
-                    print("Error fetching Profile: \(String(describing: httpResponse?.statusCode))")
-                    return
-                }
-
-                if httpResponse.statusCode == 401 {
-                    completion(.failure(NetworkError.unauthorized))
-                    return
-                } else if (200..<300).contains(httpResponse.statusCode) {
-                    if let data = data {
-                        let decoder = JSONDecoder()
-                        decoder.keyDecodingStrategy = .convertFromSnakeCase
-                        do {
-                            let profileResult = try decoder.decode(ProfileResult.self, from: data)
-                            let loginName = "@" + profileResult.username
-                            let name = "\(profileResult.firstName) \(profileResult.lastName)"
-                            let profile = Profile(username: profileResult.username,
-                                                  name: name,
-                                                  loginName: loginName,
-                                                  bio: profileResult.bio)
-                            completion(.success(profile))
-                        } catch {
-                            completion(.failure(error))
-                        }
-                    } else {
-                        completion(.failure(NetworkError.noData))
-                    }
-                }
+        task = session.objectTask(for: request) { [weak self] (result: Result<ProfileResult, Error>) in
+            switch result {
+            case .success(let profileResult):
+                let loginName = "@" + profileResult.username
+                let name = "\(profileResult.firstName) \(profileResult.lastName)"
+                let profile = Profile(username: profileResult.username,
+                                      name: name,
+                                      loginName: loginName,
+                                      bio: profileResult.bio)
+                completion(.success(profile))
+            case .failure(let error):
+                fatalError("Error: \(error)")
+            }
+            if let task = self?.task {
+                task.resume()
+            } else {
+                print("Error unwrapping task")
             }
         }
-        task.resume()
     }
 
     private func makeRequest(token: String) -> URLRequest {
@@ -92,3 +70,5 @@ final class ProfileService {
         return request
     }
 }
+
+
