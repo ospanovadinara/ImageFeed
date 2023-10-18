@@ -93,10 +93,23 @@ extension SplashViewController: AuthViewControllerDelegate {
             case .failure(let error):
                 UIBlockingProgressHUD.dismiss()
                 // TODO [Sprint 11] Показать ошибку
-                print("Error fetching auth token: \(error)")
+                showAlertWithError()
                 break
             }
         }
+    }
+
+    private func showAlertWithError() {
+        let alertController = UIAlertController(
+            title: "Что-то пошло не так",
+            message: "Не удалось войти в систему",
+            preferredStyle: .alert
+        )
+
+        let okAction = UIAlertAction(title: "Ок", style: .default, handler: nil)
+        alertController.addAction(okAction)
+
+        present(alertController, animated: true, completion: nil)
     }
 
     private func fetchProfile(token: String) {
@@ -116,3 +129,17 @@ extension SplashViewController: AuthViewControllerDelegate {
         }
     }
 }
+
+
+//    func showErrorAlert(_ error: Error) {
+//        let alertController = UIAlertController(
+//            title: "Что-то пошло не так",
+//            message: "Не удалось войти в систему",
+//            preferredStyle: .alert
+//        )
+//
+//        let okAction = UIAlertAction(title: "Ок", style: .default, handler: nil)
+//        alertController.addAction(okAction)
+//
+//        present(alertController, animated: true, completion: nil)
+//    }
