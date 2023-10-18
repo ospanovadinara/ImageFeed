@@ -11,7 +11,6 @@ import Kingfisher
 
 final class ProfileViewController: UIViewController {
     private let profileService = ProfileService.shared
-    private var authToken = OAuth2TokenStorage.shared.token
     private var profileImageServiceObserver: NSObjectProtocol?
     private var profile: Profile?
     private let profileImageService = ProfileImageService.shared

@@ -91,6 +91,7 @@ extension SplashViewController: AuthViewControllerDelegate {
 //                case .success:
 //                self.switchToTabBarController()
             case .failure(let error):
+                print(error)
                 UIBlockingProgressHUD.dismiss()
                 // TODO [Sprint 11] Показать ошибку
                 showAlertWithError()
