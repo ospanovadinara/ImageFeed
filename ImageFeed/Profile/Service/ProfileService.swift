@@ -9,66 +9,69 @@ import Foundation
 
 final class ProfileService {
     static let shared = ProfileService()
-    private let session = URLSession.shared
-    private var task: URLSessionTask?
-    private var authToken = OAuth2TokenStorage.shared.token
     private(set) var profile: Profile?
+    private var currentTask: URLSessionTask?
+    private let session = URLSession.shared
+    private let builder: URLRequestBuilder
 
-    init() {}
+    init(builder: URLRequestBuilder = .shared) {
+        self.builder = builder
+    }
+    
+    func fetchProfile(completion: @escaping (Result <Profile, Error>) -> Void) {
+        currentTask?.cancel()
+        guard let request = makeFetchProfileRequest() else {
+            assertionFailure("Invalid request")
+            completion(.failure(NetworkError.invalidRequest))
+            return
+        }
 
-    func fetchProfile(_ token: String,
-                      completion: @escaping (Result <Profile, Error>) -> Void) {
-        assert(Thread.isMainThread)
-        if authToken == token { return }
-        task?.cancel()
-        authToken = token
-
-        guard let authToken = authToken else { return }
-        let request = makeRequest(token: authToken)
-        task = session.objectTask(for: request) { [weak self] (result: Result<ProfileResult, Error>) in
-            switch result {
+        let session = URLSession.shared
+        currentTask = session.objectTask(for: request) {
+            [weak self] (response: Result<ProfileResult, Error>) in
+            self?.currentTask = nil
+            switch response {
             case .success(let profileResult):
-                let loginName = "@" + profileResult.username
-                let name = "\(profileResult.firstName) \(profileResult.lastName)"
-                let profile = Profile(username: profileResult.username,
-                                      name: name,
-                                      loginName: loginName,
-                                      bio: profileResult.bio)
+                let profile = Profile(result: profileResult)
+                self?.profile = profile
                 completion(.success(profile))
             case .failure(let error):
-                fatalError("Error: \(error)")
-            }
-            if let task = self?.task {
-                task.resume()
-            } else {
-                print("Error unwrapping task")
+                completion(.failure(error))
             }
         }
-    }
-
-    private func makeRequest(token: String) -> URLRequest {
-        //Создание URL c использованием URLComponents
-        var urlComponents = URLComponents()
-        urlComponents.scheme = "https"
-        urlComponents.host = "api.unsplash.com"
-        urlComponents.path = "/users/me"
-
-        guard let url = urlComponents.url else {
-            fatalError("Failed to create URL")
-        }
-
-        //Создание HTTP-запроса
-        var request = URLRequest(url: url)
-
-        //Создание HTTP-метода
-        request.httpMethod = "GET"
-
-        if let token = OAuth2TokenStorage.shared.token {
-            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-
-        }
-        return request
     }
 }
+
+extension ProfileService {
+    private func makeFetchProfileRequest() -> URLRequest? {
+        builder.makeRequest(path: "/me",
+                            httpMethod: "GET",
+                            baseURL: "api.unsplash.com")
+//        var urlComponents = URLComponents()
+//        urlComponents.scheme = "https"
+//        urlComponents.host = "api.unsplash.com"
+//        urlComponents.path = "/users/me"
+//
+//        guard let url = urlComponents.url else {
+//            fatalError("Failed to create URL")
+//        }
+//
+//        //Создание HTTP-запроса
+//        var request = URLRequest(url: url)
+//
+//        //Создание HTTP-метода
+//        request.httpMethod = "GET"
+//
+//        if let token = OAuth2TokenStorage.shared.token {
+//            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+//        }
+//
+//        return request
+    }
+}
+
+
+
+
 
 

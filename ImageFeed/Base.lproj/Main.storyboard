@@ -191,7 +191,7 @@
         <!--Tab Bar Controller-->
         <scene sceneID="6iN-Vk-tOd">
             <objects>
-                <tabBarController storyboardIdentifier="TabBarViewController" id="D2r-Nl-4c2" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="TabBarViewController" id="D2r-Nl-4c2" customClass="TabBarController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="8gw-Gt-NYZ">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -210,7 +210,7 @@
         <!--Auth View Controller-->
         <scene sceneID="T3D-11-JPF">
             <objects>
-                <viewController id="iEX-CS-gEk" customClass="AuthViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AuthViewControllerID" id="iEX-CS-gEk" customClass="AuthViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="N9n-BN-m67">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
