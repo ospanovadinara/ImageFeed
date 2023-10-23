@@ -12,8 +12,8 @@ import Kingfisher
 final class ProfileViewController: UIViewController {
     private let profileService = ProfileService.shared
     private var profileImageServiceObserver: NSObjectProtocol?
-    private var profile: Profile?
-    private let profileImageService = ProfileImageService.shared
+//    private var profile: Profile?
+//    private let profileImageService = ProfileImageService.shared
 
     // MARK: - UI
     private lazy var avatarImage: UIImageView = {
@@ -65,19 +65,19 @@ final class ProfileViewController: UIViewController {
         super.viewDidLoad()
         setupViews()
         setupConstraints()
-        updateProfileDetails(profile: profileService.profile ?? Profile.init(username: "",
-                                                                             name: "",
-                                                                             loginName: "",
-                                                                             bio: ""))
-        profileImageServiceObserver = NotificationCenter.default
-            .addObserver(
-                forName: ProfileImageService.DidChangeNotification,
-                object: nil,
-                queue: .main
-            ) { [weak self] _ in
-                guard let self = self else { return }
-//                self.updateAvatar()
-            }
+        if let profile = profileService.profile {
+            updateProfileDetails(profile: profile)
+        }
+
+//        profileImageServiceObserver = NotificationCenter.default
+//            .addObserver(
+//                forName: ProfileImageService.DidChangeNotification,
+//                object: nil,
+//                queue: .main
+//            ) { [weak self] _ in
+//                guard let self = self else { return }
+////                self.updateAvatar()
+//            }
     }
 
     // MARK: - Setup Views

@@ -7,18 +7,18 @@
 
 import Foundation
 
-final class ProfileImageService {
-
-    static let shared = ProfileImageService()
-    private (set) var avatarURL: String?
-    private let session = URLSession.shared
-    private var task: URLSessionTask?
-    private var lastUserName: String?
-    static let DidChangeNotification = Notification.Name(rawValue: "ProfileImageProviderDidChange")
-    
-    func fetchProfileImageURL(username: String,
-                              _ completion: @escaping (Result<String, Error>) -> Void) {
-    }
+//final class ProfileImageService {
+//
+//    static let shared = ProfileImageService()
+//    private (set) var avatarURL: String?
+//    private let session = URLSession.shared
+//    private var task: URLSessionTask?
+//    private var lastUserName: String?
+//    static let DidChangeNotification = Notification.Name(rawValue: "ProfileImageProviderDidChange")
+//
+//    func fetchProfileImageURL(username: String,
+//                              _ completion: @escaping (Result<String, Error>) -> Void) {
+//    }
 //        assert(Thread.isMainThread)
 //        if lastUserName == username { return }
 //        task?.cancel()
@@ -70,7 +70,7 @@ final class ProfileImageService {
 //        }
 //        return request
 //    }
-}
+//}
 
 
 

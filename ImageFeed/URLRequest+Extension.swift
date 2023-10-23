@@ -17,16 +17,13 @@ final class URLRequestBuilder {
     }
 
     func makeRequest(path: String, httpMethod: String, baseURL: String) -> URLRequest? {
-        //Создание URL 
         guard
             let url = URL(string: "https://unsplash.com"),
             let baseUrl = URL(string: path, relativeTo: url)
         else { return nil }
 
-        //Создание HTTP-запроса
         var request = URLRequest(url: baseUrl)
 
-        //Создание HTTP-метода
         request.httpMethod = httpMethod
 
         if let token = storage.token {

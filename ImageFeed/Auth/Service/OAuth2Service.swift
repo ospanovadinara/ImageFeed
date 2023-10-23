@@ -13,20 +13,13 @@ final class OAuth2Service {
     private let session: URLSession
     private var lastCode: String?
     private var currentTask: URLSessionTask?
-    private let builder: URLRequestBuilder
 
     init(
         session: URLSession = .shared,
-        storage: OAuth2TokenStorage = .shared,
-        builder: URLRequestBuilder = .shared
+        storage: OAuth2TokenStorage = .shared
     ) {
         self.session = session
         self.storage = storage
-        self.builder = builder
-    }
-
-    var isAuthenticated: Bool {
-        storage.token != nil
     }
 
     func fetchOAuthToken(_ code: String,
@@ -44,7 +37,6 @@ final class OAuth2Service {
             return
         }
 
-        let session = URLSession.shared
         currentTask = session.objectTask(for: request) {
             [weak self] (response: Result<OAuthTokenResponseBody, Error>) in
             self?.currentTask = nil
@@ -62,14 +54,27 @@ final class OAuth2Service {
 
 extension OAuth2Service {
     private func  authTokenRequest(code: String) -> URLRequest? {
-        builder.makeRequest(path: "/oauth/token"
-                            + "?client_id=\(AccessKey)"
-                            + "&&client_secret=\(SecretKey)"
-                            + "&&redirect_uri=\(RedirectURI)"
-                            + "&&code=\(code)"
-                            + "&&grant_type=authorization_code",
-                            httpMethod: "POST",
-                            baseURL: "https://unsplash.com")
+        var urlComponents = URLComponents()
+        urlComponents.scheme = "https"
+        urlComponents.host = "unsplash.com"
+        urlComponents.path = "/oauth/token"
+
+        urlComponents.queryItems = [
+            URLQueryItem(name: "client_id", value: AccessKey),
+            URLQueryItem(name: "client_secret", value: SecretKey),
+            URLQueryItem(name: "redirect_uri", value: RedirectURI),
+            URLQueryItem(name: "code", value: code),
+            URLQueryItem(name: "grant_type", value: "authorization_code")
+        ]
+
+        guard let url = urlComponents.url else {
+            fatalError("Failed to create URL")
+        }
+
+        var request = URLRequest(url: url)
+
+        request.httpMethod = "POST"
+        return request
     }
 }
 

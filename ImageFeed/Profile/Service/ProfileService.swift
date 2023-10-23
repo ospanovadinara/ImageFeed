@@ -10,29 +10,42 @@ import Foundation
 final class ProfileService {
     static let shared = ProfileService()
     private(set) var profile: Profile?
-    private var currentTask: URLSessionTask?
     private let session = URLSession.shared
-    private let builder: URLRequestBuilder
+    private var lastToken: String?
+    private var currentTask: URLSessionTask?
 
-    init(builder: URLRequestBuilder = .shared) {
-        self.builder = builder
+    func fetchProfile(_ token: String) {
+        self.fetchProfile(token) { result in
+            switch result {
+            case .success(let profile):
+                self.profile = profile
+            case .failure(let error):
+                fatalError("Error: \(error)")
+            }
+        }
     }
-    
-    func fetchProfile(completion: @escaping (Result <Profile, Error>) -> Void) {
+
+
+    func fetchProfile(_ token: String, completion: @escaping (Result <Profile, Error>) -> Void) {
+        assert(Thread.isMainThread)
+        if lastToken == token { return }
         currentTask?.cancel()
-        guard let request = makeFetchProfileRequest() else {
+        lastToken = token
+
+        guard let request = makeFetchProfileRequest(token: token) else {
             assertionFailure("Invalid request")
             completion(.failure(NetworkError.invalidRequest))
             return
         }
 
-        let session = URLSession.shared
         currentTask = session.objectTask(for: request) {
             [weak self] (response: Result<ProfileResult, Error>) in
-            self?.currentTask = nil
             switch response {
             case .success(let profileResult):
-                let profile = Profile(result: profileResult)
+                let profile = Profile(username: profileResult.username,
+                                      name: "\(profileResult.firstName)\(profileResult.lastName ?? "")",
+                                      loginName: "@\(profileResult.username)",
+                                      bio: profileResult.bio)
                 self?.profile = profile
                 completion(.success(profile))
             case .failure(let error):
@@ -43,30 +56,24 @@ final class ProfileService {
 }
 
 extension ProfileService {
-    private func makeFetchProfileRequest() -> URLRequest? {
-        builder.makeRequest(path: "/me",
-                            httpMethod: "GET",
-                            baseURL: "api.unsplash.com")
-//        var urlComponents = URLComponents()
-//        urlComponents.scheme = "https"
-//        urlComponents.host = "api.unsplash.com"
-//        urlComponents.path = "/users/me"
-//
-//        guard let url = urlComponents.url else {
-//            fatalError("Failed to create URL")
-//        }
-//
-//        //Создание HTTP-запроса
-//        var request = URLRequest(url: url)
-//
-//        //Создание HTTP-метода
-//        request.httpMethod = "GET"
-//
-//        if let token = OAuth2TokenStorage.shared.token {
-//            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-//        }
-//
-//        return request
+    private func makeFetchProfileRequest(token: String) -> URLRequest? {
+        var urlComponents = URLComponents()
+        urlComponents.scheme = "https"
+        urlComponents.host = "api.unsplash.com"
+        urlComponents.path = "/me"
+
+        guard let url = urlComponents.url else {
+            fatalError("Failed to create URL")
+        }
+
+        var request = URLRequest(url: url)
+
+        request.httpMethod = "GET"
+
+        if let token = OAuth2TokenStorage.shared.token {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+        return request
     }
 }
 
