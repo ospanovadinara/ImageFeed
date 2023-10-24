@@ -23,18 +23,18 @@ final class ProfileImageService {
         guard let request = makeRequest(username: username) else { return }
         let session = URLSession.shared
         let task = session.objectTask(for: request) { [weak self]
-            (result: Result<ProfileResult, Error>) in
+            (result: Result<UserResult, Error>) in
             guard let self = self else { return }
 
             switch result {
             case .success(let profilePhoto):
-                guard let mediumPhoto = profilePhoto.profileImage?.medium else { return }
-                self.avatarURL = URL(string: mediumPhoto)
-                completion(.success(mediumPhoto))
+                guard let smallPhoto = profilePhoto.profileImage?.small else { return }
+                self.avatarURL = URL(string: smallPhoto)
+                completion(.success(smallPhoto))
                 NotificationCenter.default.post(
                     name: ProfileImageService.didChangeNotification,
                     object: self,
-                    userInfo: ["URL": mediumPhoto]
+                    userInfo: ["URL": smallPhoto]
                 )
             case .failure(let error):
                 completion(.failure(error))

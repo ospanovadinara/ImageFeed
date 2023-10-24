@@ -39,12 +39,22 @@ final class SplashViewController: UIViewController {
         super.viewDidAppear(animated)
 
         if let token = oauth2TokenStorage.token {
-            profileService.fetchProfile(token) { result in
+            profileService.fetchProfile(token) { [weak self] result in
                 switch result {
                 case .success(_ ):
-                    self.switchToTabBarController()
+                    self?.switchToTabBarController()
+                    if let username = self?.profileService.profile?.username {
+                        self?.profileImageService.fetchProfileImageURL(username: username) { result in
+                            switch result {
+                            case .success(let imageUrl):
+                                print("Avatar URL: \(imageUrl)")
+                            case .failure(let error):
+                                self?.showAlert(error: error)
+                            }
+                        }
+                    }
                 case .failure(let error):
-                    self.showAlert(error: error)
+                    self?.showAlert(error: error)
                 }
             }
         } else {

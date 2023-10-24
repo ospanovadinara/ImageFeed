@@ -8,7 +8,7 @@
 import UIKit
 
 struct UserResult: Codable {
-    let profileImage: ImageURL
+    let profileImage: ImageURL?
 }
 
 struct ImageURL: Codable {
