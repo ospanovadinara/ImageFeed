@@ -12,14 +12,12 @@ final class AlertPresenter{
 
     func showAlert(title: String,
                    message: String,
-                   handler: @escaping () -> Void) {
+                   preferredStyle: UIAlertController.Style) {
         let alert = UIAlertController(title: title,
                                       message: message,
                                       preferredStyle: .alert)
 
-        let alertAction = UIAlertAction(title: "OK", style: .default) { _ in
-            handler()
-        }
+        let alertAction = UIAlertAction(title: "OK", style: .default, handler: { _ in })
         alert.addAction(alertAction)
         delegate?.present(alert, animated: true)
     }

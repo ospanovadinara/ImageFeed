@@ -66,7 +66,7 @@ extension OAuth2Service {
             URLQueryItem(name: "code", value: code),
             URLQueryItem(name: "grant_type", value: "authorization_code")
         ]
-
+        
         guard let url = urlComponents.url else {
             fatalError("Failed to create URL")
         }

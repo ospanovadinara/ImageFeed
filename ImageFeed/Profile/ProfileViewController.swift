@@ -12,8 +12,8 @@ import Kingfisher
 final class ProfileViewController: UIViewController {
     private let profileService = ProfileService.shared
     private var profileImageServiceObserver: NSObjectProtocol?
-//    private var profile: Profile?
-//    private let profileImageService = ProfileImageService.shared
+    private let profileImageService = ProfileImageService.shared
+    private var profile: Profile?
 
     // MARK: - UI
     private lazy var avatarImage: UIImageView = {
@@ -65,19 +65,28 @@ final class ProfileViewController: UIViewController {
         super.viewDidLoad()
         setupViews()
         setupConstraints()
-        if let profile = profileService.profile {
-            updateProfileDetails(profile: profile)
+
+        if let url = profileImageService.avatarURL {
+            updateAvatar(url: url)
         }
 
-//        profileImageServiceObserver = NotificationCenter.default
-//            .addObserver(
-//                forName: ProfileImageService.DidChangeNotification,
-//                object: nil,
-//                queue: .main
-//            ) { [weak self] _ in
-//                guard let self = self else { return }
-////                self.updateAvatar()
-//            }
+        profileImageServiceObserver = NotificationCenter.default
+            .addObserver(
+                forName: ProfileImageService.didChangeNotification,
+                object: nil,
+                queue: .main
+            ) { [weak self] notification in
+                self?.updateAvatar(notification: notification)
+            }
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if let profile = profileService.profile {
+            updateProfileDetails(profile: profile)
+        } else {
+            assertionFailure("No saved profile")
+        }
     }
 
     // MARK: - Setup Views
@@ -113,41 +122,24 @@ final class ProfileViewController: UIViewController {
         }
     }
 
-//    private func updateAvatar() {
-//        guard
-//            let profileImageURL = ProfileImageService.shared.avatarURL,
-//            let _ = URL(string: profileImageURL)
-//        else { return }
-//        let downloader = ImageDownloader.default
-//        let imageView = UIImageView()
-//        guard let username = profile?.username else { return }
-//        profileImageService.fetchProfileImageURL(username: username) { _ in
-//        }
-//        let imageUrlPath = "https://unsplash.com/\(username)/profile"
-//        let imageUrl = URL(string: imageUrlPath)
-//
-//        let processor = RoundCornerImageProcessor(cornerRadius: 20)
-//        imageView.kf.indicatorType = .activity
-//
-//        imageView.kf.setImage(with: imageUrl,
-//                              placeholder: UIImage(named: "placeholder.jpeg"),
-//                              options: [
-//                                .processor(processor)
-//                              ]) { result in
-//                                  switch result {
-//                                  case .success(let value):
-//                                      print(value.image)
-//                                      print(value.cacheType)
-//                                      print(value.source)
-//                                  case .failure(let error):
-//                                      print(error)
-//                                  }
-//                              }
-//
-//        let cache = ImageCache.default
-//        cache.clearMemoryCache()
-//        cache.clearDiskCache()
-//    }
+    @objc
+    private func updateAvatar(notification: Notification) {
+        guard
+            isViewLoaded,
+            let userInfo = notification.userInfo,
+            let profileImageURL = userInfo["URL"] as? String,
+            let url = URL(string: profileImageURL)
+        else { return }
+        updateAvatar(url: url)
+    }
+
+    private func updateAvatar(url: URL) {
+        avatarImage.kf.indicatorType = .activity
+        let processor = RoundCornerImageProcessor(cornerRadius: 61)
+        avatarImage.kf.setImage(with: url,
+                                options: [
+                                .processor(processor)])
+    }
 
     private func updateProfileDetails(profile: Profile) {
             nameLabel.text = profile.name
