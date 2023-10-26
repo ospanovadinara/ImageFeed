@@ -19,6 +19,9 @@ final class ProfileViewController: UIViewController {
     private lazy var avatarImage: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "avatar")
+        imageView.layer.cornerRadius = 35
+        imageView.clipsToBounds = true
+
         return imageView
     }()
 
@@ -105,7 +108,7 @@ final class ProfileViewController: UIViewController {
     // MARK: - Setup Constraints
     private func setupConstraints() {
         avatarImage.snp.makeConstraints { make in
-            make.size.equalTo(76)
+            make.size.equalTo(70)
             make.top.equalToSuperview().offset(76)
             make.leading.equalToSuperview().offset(16)
         }
