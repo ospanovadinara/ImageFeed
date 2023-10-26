@@ -20,6 +20,3 @@ struct ProfileImage: Codable {
     let medium: String?
     let large: String?
 }
-
-
-

@@ -14,6 +14,16 @@ final class ProfileService {
     private var lastToken: String?
     private var currentTask: URLSessionTask?
 
+    private init(
+        profile: Profile? = nil,
+        lastToken: String? = nil,
+        currentTask: URLSessionTask? = nil
+    ) {
+        self.profile = profile
+        self.lastToken = lastToken
+        self.currentTask = currentTask
+    }
+
     func fetchProfile(_ token: String) {
         self.fetchProfile(token) { result in
             switch result {

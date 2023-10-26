@@ -13,8 +13,15 @@ final class ProfileImageService {
     static let shared = ProfileImageService()
     static let didChangeNotification = Notification.Name(rawValue: "ProfileImageProviderDidChange")
     private (set) var avatarURL: URL?
-
     private var currentTask: URLSessionTask?
+
+    private init(
+        avatarURL: URL? = nil,
+        currentTask: URLSessionTask? = nil
+    ) {
+        self.avatarURL = avatarURL
+        self.currentTask = currentTask
+    }
 
     func fetchProfileImageURL(username: String,
                               _ completion: @escaping (Result<String, Error>) -> Void) {
