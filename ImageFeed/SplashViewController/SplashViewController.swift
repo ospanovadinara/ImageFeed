@@ -16,7 +16,6 @@ final class SplashViewController: UIViewController {
     private var oauth2TokenStorage = OAuth2TokenStorage.shared
 
     private var profile: Profile?
-    private let alertPresenter = AlertPresenter()
 
 
     // MARK: - UI
@@ -48,13 +47,13 @@ final class SplashViewController: UIViewController {
                             switch result {
                             case .success(let imageUrl):
                                 print("Avatar URL: \(imageUrl)")
-                            case .failure(let error):
-                                self?.showAlert(error: error)
+                            case .failure(_):
+                                self?.showAlert()
                             }
                         }
                     }
-                case .failure(let error):
-                    self?.showAlert(error: error)
+                case .failure(_):
+                    self?.showAlert()
                 }
             }
         } else {
@@ -124,15 +123,15 @@ extension SplashViewController: AuthViewControllerDelegate {
                             switch result {
                             case .success(let imageUrl):
                                 print("Avatar URL: \(imageUrl)")
-                            case .failure(let error):
-                                self?.showAlert(error: error)
+                            case .failure(_):
+                                self?.showAlert()
                             }
                         }
                     }
                     UIBlockingProgressHUD.dismiss()
                 }
-            case .failure(let error):
-                self?.showAlert(error: error)
+            case .failure(_):
+                self?.showAlert()
                 UIBlockingProgressHUD.dismiss()
             }
         }
@@ -145,18 +144,23 @@ extension SplashViewController: AuthViewControllerDelegate {
             case .success(_):
                 self?.switchToTabBarController()
                 UIBlockingProgressHUD.dismiss()
-            case .failure(let error):
+            case .failure(_):
                 UIBlockingProgressHUD.dismiss()
-                self?.showAlert(error: error)
+                self?.showAlert()
             }
             completion()
         })
     }
 
-    private func showAlert(error: Error) {
-        alertPresenter.showAlert(title: "Что-то пошло не так :(",
-                                 message: "Не удалось войти в систему",
-                                 preferredStyle: .alert)
+    private func showAlert() {
+        let alert = UIAlertController(title: "Что-то пошло не так",
+                                      message: "Не удалось войти в систему",
+                                      preferredStyle: .alert)
+
+        let action = UIAlertAction(title: "Oк", style: .default, handler: { _ in })
+
+        alert.addAction(action)
+        self.present(alert, animated: true)
     }
 }
 

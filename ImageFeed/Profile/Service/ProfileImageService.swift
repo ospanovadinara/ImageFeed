@@ -45,7 +45,6 @@ final class ProfileImageService {
         task.resume()
     }
 
-
     private func makeRequest(username: String) -> URLRequest? {
         var urlComponents = URLComponents()
         urlComponents.scheme = "https"

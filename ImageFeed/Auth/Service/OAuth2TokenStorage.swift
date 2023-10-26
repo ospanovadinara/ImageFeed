@@ -14,7 +14,6 @@ final class OAuth2TokenStorage {
 
     private init() {}
 
-
     var token: String? {
         get {
             return keyChainWrapper.string(forKey: TokenKey)
