@@ -5,70 +5,77 @@
 //  Created by Dinara on 03.10.2023.
 //
 
-import Foundation
+import UIKit
 
 final class OAuth2Service {
     static let shared = OAuth2Service()
-    private init() {}
+    private let storage: OAuth2TokenStorage
+    private let session: URLSession
+    private var lastCode: String?
+    private var currentTask: URLSessionTask?
 
-    func fetchAuthToken(_ code: String,
+    private init(
+        session: URLSession = .shared,
+        storage: OAuth2TokenStorage = .shared
+    ) {
+        self.session = session
+        self.storage = storage
+    }
+
+    func fetchOAuthToken(_ code: String,
                         completion: @escaping (Result<String, Error>) -> Void) {
-        //Создание URL c использованием URLComponents
+
+        guard code != lastCode else {
+            return
+        }
+
+        lastCode = code
+
+        guard let request = authTokenRequest(code: code) else {
+            assertionFailure("Invalid request")
+            completion(.failure(NetworkError.invalidRequest))
+            return
+        }
+
+        currentTask = session.objectTask(for: request) {
+            [weak self] (response: Result<OAuthTokenResponseBody, Error>) in
+            self?.currentTask = nil
+            switch response {
+            case .success(let body):
+                let authToken = body.accessToken
+                self?.storage.token = authToken
+                completion(.success(authToken))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+}
+
+extension OAuth2Service {
+    private func  authTokenRequest(code: String) -> URLRequest? {
         var urlComponents = URLComponents()
         urlComponents.scheme = "https"
         urlComponents.host = "unsplash.com"
         urlComponents.path = "/oauth/token"
-        
-        guard let url = urlComponents.url else {
-            return
-        }
-        
-        //Создание HTTP-запроса
-        var request = URLRequest(url: url)
-        
-        //Создание HTTP-метода
-        request.httpMethod = "POST"
-        
-        let bodyParameters = [
-            "client_id": AccessKey,
-            "client_secret": SecretKey,
-            "redirect_uri": RedirectURI,
-            "code": code,
-            "grant_type": "authorization_code"
+
+        urlComponents.queryItems = [
+            URLQueryItem(name: "client_id", value: AccessKey),
+            URLQueryItem(name: "client_secret", value: SecretKey),
+            URLQueryItem(name: "redirect_uri", value: RedirectURI),
+            URLQueryItem(name: "code", value: code),
+            URLQueryItem(name: "grant_type", value: "authorization_code")
         ]
         
-        request.httpBody = try? JSONSerialization.data(withJSONObject: bodyParameters)
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        let session = URLSession.shared
-        let task = session.dataTask(with: request) { data, response, error in
-            DispatchQueue.main.async {
-                if let error = error {
-                    completion(.failure(error))
-                    return
-                }
-                
-                //Проверяем значение HTTP-кода
-                guard let httpResponse = response as? HTTPURLResponse,
-                      (200..<300).contains(httpResponse.statusCode) else {
-                    completion(.failure(NetworkError.invalidStatusCode))
-                    return
-                }
-
-                let decoder = JSONDecoder()
-                decoder.keyDecodingStrategy = .convertFromSnakeCase
-                if let data = data {
-                    do {
-                        let responseBody = try decoder.decode(OAuthTokenResponseBody.self, from: data)
-                        completion(.success(responseBody.accessToken))
-                    } catch {
-                        completion(.failure(error))
-                    }
-                } else {
-                    completion(.failure(NetworkError.noData))
-                }
-            }
+        guard let url = urlComponents.url else {
+            fatalError("Failed to create URL")
         }
-        task.resume()
+
+        var request = URLRequest(url: url)
+
+        request.httpMethod = "POST"
+        return request
     }
 }
+
+

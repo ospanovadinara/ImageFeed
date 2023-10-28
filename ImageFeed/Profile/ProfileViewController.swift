@@ -7,13 +7,21 @@
 
 import UIKit
 import SnapKit
+import Kingfisher
 
 final class ProfileViewController: UIViewController {
+    private let profileService = ProfileService.shared
+    private var profileImageServiceObserver: NSObjectProtocol?
+    private let profileImageService = ProfileImageService.shared
+    private var profile: Profile?
 
     // MARK: - UI
     private lazy var avatarImage: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "avatar")
+        imageView.layer.cornerRadius = 35
+        imageView.clipsToBounds = true
+
         return imageView
     }()
 
@@ -58,8 +66,31 @@ final class ProfileViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = UIColor(named: "YP Black")
         setupViews()
         setupConstraints()
+
+        if let url = profileImageService.avatarURL {
+            updateAvatar(url: url)
+        }
+
+        profileImageServiceObserver = NotificationCenter.default
+            .addObserver(
+                forName: ProfileImageService.didChangeNotification,
+                object: nil,
+                queue: .main
+            ) { [weak self] notification in
+                self?.updateAvatar(notification: notification)
+            }
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if let profile = profileService.profile {
+            updateProfileDetails(profile: profile)
+        } else {
+            assertionFailure("No saved profile")
+        }
     }
 
     // MARK: - Setup Views
@@ -78,7 +109,7 @@ final class ProfileViewController: UIViewController {
     // MARK: - Setup Constraints
     private func setupConstraints() {
         avatarImage.snp.makeConstraints { make in
-            make.size.equalTo(76)
+            make.size.equalTo(70)
             make.top.equalToSuperview().offset(76)
             make.leading.equalToSuperview().offset(16)
         }
@@ -93,6 +124,31 @@ final class ProfileViewController: UIViewController {
             make.top.equalTo(avatarImage.snp.bottom).offset(8)
             make.leading.equalToSuperview().offset(16)
         }
+    }
+
+    @objc
+    private func updateAvatar(notification: Notification) {
+        guard
+            isViewLoaded,
+            let userInfo = notification.userInfo,
+            let profileImageURL = userInfo["URL"] as? String,
+            let url = URL(string: profileImageURL)
+        else { return }
+        updateAvatar(url: url)
+    }
+
+    private func updateAvatar(url: URL) {
+        avatarImage.kf.indicatorType = .activity
+        let processor = RoundCornerImageProcessor(cornerRadius: 61)
+        avatarImage.kf.setImage(with: url,
+                                options: [
+                                .processor(processor)])
+    }
+
+    private func updateProfileDetails(profile: Profile) {
+            nameLabel.text = profile.name
+            userNameLabel.text = profile.loginName
+            statusLabel.text = profile.bio
     }
 
     // MARK: - Actions
