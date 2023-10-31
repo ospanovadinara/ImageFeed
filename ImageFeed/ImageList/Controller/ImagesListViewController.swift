@@ -111,8 +111,19 @@ extension ImagesListViewController: UITableViewDelegate {
         forRowAt indexPath: IndexPath
     ) {
         if indexPath.row + 1 == imageListService.photos.count {
-            imageListService.fetchPhotosNextPage(<#String#>,
-                                                 completion: <#(Result<String, Error>) -> Void#>)
+            let nextPage = (imageListService.photos.count / imageListService.perPage) + 1
+
+            imageListService.fetchPhotosNextPage(nextPage) { result in
+                switch result {
+                case .success:
+                    DispatchQueue.main.async {
+                        self.tableView.reloadData()
+                    }
+
+                case .failure(let error):
+                    print("Failed to fetch photos: \(error)")
+                }
+            }
         }
     }
 }
