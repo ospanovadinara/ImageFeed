@@ -8,6 +8,7 @@
 import UIKit
 
 final class SingleImageViewController: UIViewController {
+    var imageUrl: String?
     var image: UIImage! {
         didSet {
             guard isViewLoaded else { return }
@@ -19,6 +20,7 @@ final class SingleImageViewController: UIViewController {
     // MARK: - UI
     @IBOutlet var imageView: UIImageView!
     @IBOutlet weak var scrollView: UIScrollView!
+    
 
     // MARK: - Lifecycle
     override func viewDidLoad() {
