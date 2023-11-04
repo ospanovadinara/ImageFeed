@@ -88,8 +88,7 @@ extension ImagesListViewController: UITableViewDataSource {
             imageListCell.cellImage.kf.setImage(
                 with: url,
                 placeholder: UIImage(named: "placeholder"),
-                options: []) { [weak self] result in
-                    guard let self = self else { return }
+                options: []) { result in
                     switch result {
                     case .success(_):
                         if let createdAt = image.createdAt {
@@ -107,8 +106,6 @@ extension ImagesListViewController: UITableViewDataSource {
                     }
                 }
         }
-        //        imageListCell.configCell(image: image)
-
         return imageListCell
     }
 }
@@ -130,19 +127,28 @@ extension ImagesListViewController: UITableViewDelegate {
         _ tableView: UITableView,
         heightForRowAt indexPath: IndexPath
     ) -> CGFloat {
-        guard let image = UIImage(named: "\([indexPath.row])") else {
-            return 0
+
+        let defaultCellHeight: CGFloat = 100.0
+
+        guard indexPath.row < photos.count else {
+            return defaultCellHeight
         }
 
-        let imageInsets = UIEdgeInsets(top: 4,
-                                       left: 16,
-                                       bottom: 4,
-                                       right: 16)
-        let imageViewWidth = tableView.bounds.width - imageInsets.left - imageInsets.right
-        let imageWidth = image.size.width
-        let scale = imageViewWidth / imageWidth
-        let cellHeight = image.size.height * scale + imageInsets.top + imageInsets.bottom
-        return cellHeight
+        let image = photos[indexPath.row]
+
+        if let image = UIImage(named: image.thumbImageURL) {
+            let imageInsets = UIEdgeInsets(top: 4,
+                                           left: 16,
+                                           bottom: 4,
+                                           right: 16)
+            let imageViewWidth = tableView.bounds.width - imageInsets.left - imageInsets.right
+            let imageWidth = image.size.width
+            let scale = imageViewWidth / imageWidth
+            let cellHeight = image.size.height * scale + imageInsets.top + imageInsets.bottom
+            return cellHeight
+        } else {
+            return defaultCellHeight
+        }
     }
 
     func tableView(
