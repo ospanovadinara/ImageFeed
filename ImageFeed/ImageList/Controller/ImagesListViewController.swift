@@ -13,6 +13,7 @@ import Kingfisher
     private let ShowSingleImageSegueIdentifier = "ShowSingleImage"
     private let imageListService = ImageListService.shared
     private var photos: [Photo] = []
+     private var likedPhotoIds: Set<String> = []
     private lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateStyle = .long
@@ -191,40 +192,19 @@ extension ImagesListViewController: ImagesListCellDelegate {
             DispatchQueue.main.async {
                 switch result {
                 case .success:
-                    cell.setIsLiked(self.photos[indexPath.row].isLiked)
-                    if let index = self.photos.firstIndex(where: { $0.id == photo.id }) {
-                        let photo = self.photos[index]
-                        let newPhoto = Photo(
-                            id: photo.id,
-                            size: photo.size,
-                            createdAt: photo.createdAt,
-                            welcomeDescription: photo.welcomeDescription,
-                            thumbImageURL: photo.thumbImageURL,
-                            largeImageURL: photo.largeImageURL,
-                            isLiked: !photo.isLiked
-                        )
-                        self.photos.remove(at: index)
-                        self.photos.insert(newPhoto, at: index)
+                    self.photos[indexPath.row].isLiked.toggle()
+                    if self.photos[indexPath.row].isLiked {
+                        self.likedPhotoIds.insert(photo.id)
+                    } else {
+                        self.likedPhotoIds.remove(photo.id)
                     }
-
+                    cell.setIsLiked(self.photos[indexPath.row].isLiked)
                 case .failure(let error):
                     print("Error accured while changing like: \(error)")
                 }
                 UIBlockingProgressHUD.dismiss()
-//                showLikeAlert()
             }
         }
-    }
-
-    private func showLikeAlert() {
-        let alert = UIAlertController(title: "Что-то пошло не так",
-                                      message: "Не удалось поставить лайк",
-                                      preferredStyle: .alert)
-
-        let action = UIAlertAction(title: "Oк", style: .default, handler: { _ in })
-
-        alert.addAction(action)
-        self.present(alert, animated: true)
     }
 }
 
