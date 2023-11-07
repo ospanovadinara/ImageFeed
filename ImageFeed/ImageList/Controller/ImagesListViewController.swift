@@ -8,7 +8,7 @@
 import UIKit
 import Kingfisher
 
-final class ImagesListViewController: UIViewController {
+ final class ImagesListViewController: UIViewController {
 
     private let ShowSingleImageSegueIdentifier = "ShowSingleImage"
     private let imageListService = ImageListService.shared
@@ -81,6 +81,8 @@ extension ImagesListViewController: UITableViewDataSource {
             return UITableViewCell()
         }
 
+        imageListCell.delegate = self
+
         let image = photos[indexPath.row]
 
         if let url = URL(string: image.thumbImageURL) {
@@ -93,13 +95,12 @@ extension ImagesListViewController: UITableViewDataSource {
                     case .success(_):
                         if let createdAt = image.createdAt {
                             let dateFormatter = DateFormatter()
-                            dateFormatter.dateStyle = .long
-                            dateFormatter.timeStyle = .none
+                            dateFormatter.dateFormat = "dd MMMM yyyy"
                             imageListCell.dateLabel.text = dateFormatter.string(from: createdAt)
                         } else {
                             imageListCell.dateLabel.text = "Дата неизвестна"
                         }
-                        imageListCell.isLiked(image.isLiked)
+                        imageListCell.setIsLiked(image.isLiked)
                         tableView.reloadRows(at: [indexPath], with: .automatic)
                     case .failure(let error):
                         print(error)
@@ -128,7 +129,7 @@ extension ImagesListViewController: UITableViewDelegate {
         heightForRowAt indexPath: IndexPath
     ) -> CGFloat {
 
-        let defaultCellHeight: CGFloat = 100.0
+        let defaultCellHeight: CGFloat = 252.0
 
         guard indexPath.row < photos.count else {
             return defaultCellHeight
@@ -179,4 +180,51 @@ extension ImagesListViewController: UITableViewDelegate {
     }
 }
 
+extension ImagesListViewController: ImagesListCellDelegate {
+    func imageListCellDidTapLike(_ cell: ImagesListCell) {
+        guard let indexPath = tableView.indexPath(for: cell) else { return }
+        let photo = photos[indexPath.row]
+        UIBlockingProgressHUD.show()
+
+        imageListService.changeLike(photoId: photo.id, isLike: !photo.isLiked) { [weak self] result in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                switch result {
+                case .success:
+                    cell.setIsLiked(self.photos[indexPath.row].isLiked)
+                    if let index = self.photos.firstIndex(where: { $0.id == photo.id }) {
+                        let photo = self.photos[index]
+                        let newPhoto = Photo(
+                            id: photo.id,
+                            size: photo.size,
+                            createdAt: photo.createdAt,
+                            welcomeDescription: photo.welcomeDescription,
+                            thumbImageURL: photo.thumbImageURL,
+                            largeImageURL: photo.largeImageURL,
+                            isLiked: !photo.isLiked
+                        )
+                        self.photos.remove(at: index)
+                        self.photos.insert(newPhoto, at: index)
+                    }
+
+                case .failure(let error):
+                    print("Error accured while changing like: \(error)")
+                }
+                UIBlockingProgressHUD.dismiss()
+//                showLikeAlert()
+            }
+        }
+    }
+
+    private func showLikeAlert() {
+        let alert = UIAlertController(title: "Что-то пошло не так",
+                                      message: "Не удалось поставить лайк",
+                                      preferredStyle: .alert)
+
+        let action = UIAlertAction(title: "Oк", style: .default, handler: { _ in })
+
+        alert.addAction(action)
+        self.present(alert, animated: true)
+    }
+}
 

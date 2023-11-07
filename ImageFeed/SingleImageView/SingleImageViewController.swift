@@ -9,11 +9,13 @@ import UIKit
 
 final class SingleImageViewController: UIViewController {
     var imageUrl: String?
-    var image: UIImage! {
+    var image: UIImage? {
         didSet {
             guard isViewLoaded else { return }
             imageView.image = image
-            rescaleAndCenterImageInScrollView(image: image)
+            if let image = image {
+                rescaleAndCenterImageInScrollView(image: image)
+            }
         }
     }
 
@@ -27,8 +29,10 @@ final class SingleImageViewController: UIViewController {
         super.viewDidLoad()
         scrollView.minimumZoomScale = 0.1
         scrollView.maximumZoomScale = 1.25
-        imageView.image = image
-        rescaleAndCenterImageInScrollView(image: image)
+        if let image = image {
+            imageView.image = image
+            rescaleAndCenterImageInScrollView(image: image)
+        }
     }
 
     // MARK: - Actions

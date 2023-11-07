@@ -9,6 +9,8 @@ import UIKit
 import Kingfisher
 
 final class ImagesListCell: UITableViewCell {
+    weak var delegate: ImagesListCellDelegate?
+    
     static let reuseIdentifier = "ImagesListCell"
 
     // MARK: - UI
@@ -16,12 +18,22 @@ final class ImagesListCell: UITableViewCell {
     @IBOutlet weak var likeButton: UIButton!
     @IBOutlet weak var dateLabel: UILabel!
 
-    func isLiked(_ isLiked: Bool) {
+
+    @IBAction func likeButtonClicked(_ sender: UIButton) {
+        delegate?.imageListCellDidTapLike(self)
+    }
+
+
+    func setIsLiked(_ isLiked: Bool) {
         if isLiked {
             self.likeButton.imageView?.image = UIImage(named: "like_active")
         } else {
             self.likeButton.imageView?.image = UIImage(named: "like_not_active")
         }
     }
+}
+
+protocol ImagesListCellDelegate: AnyObject {
+    func imageListCellDidTapLike(_ cell: ImagesListCell)
 }
 

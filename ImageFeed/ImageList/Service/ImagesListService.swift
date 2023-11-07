@@ -83,3 +83,48 @@ extension ImageListService {
     }
 }
 
+extension ImageListService {
+
+    func changeLike(photoId: String, isLike: Bool, _ completion: @escaping(Result<Void, Error>) -> Void) {
+
+        guard let request = makeFetchLikeRequest(photoId: photoId, isLike: isLike) else {
+            assertionFailure("Invalid request")
+            return
+        }
+        let session = URLSession.shared
+        let task = session.objectTask(for: request) { [weak self]
+            (result: Result<LikeResponse, Error>) in
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+                switch result {
+                case .success(let likeResponse):
+                    if let index = self.photos.firstIndex(where: { $0.id == photoId }) {
+                        self.photos[index].isLiked = likeResponse.photo.likedByUser
+                    }
+                    completion(.success(()))
+                case .failure(let error):
+                    print("Failed to fetch likes: \(error.localizedDescription)")
+                    completion(.failure(error))
+                }
+            }
+        }
+        task.resume()
+    }
+
+
+    private func makeFetchLikeRequest(photoId: String, isLike: Bool) -> URLRequest? {
+        guard let url = URL(string: "https://api.unsplash.com/photos/\(photoId)/like"),
+              let token = OAuth2TokenStorage.shared.token else {
+            fatalError("Failed to create URL")
+        }
+
+        var request = URLRequest(url: url)
+
+        request.httpMethod = isLike ? "POST" : "DELETE"
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+
+        return request
+    }
+}
+
+
