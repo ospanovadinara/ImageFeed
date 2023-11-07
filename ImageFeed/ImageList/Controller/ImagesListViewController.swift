@@ -52,7 +52,7 @@ import Kingfisher
         if segue.identifier == ShowSingleImageSegueIdentifier {
             let viewController = segue.destination as! SingleImageViewController
             guard let indexPath = sender as? IndexPath else { return }
-            viewController.imageUrl = photos[indexPath.row].largeImageURL
+            viewController.fullImageUrl = photos[indexPath.row].fullImageUrl
         } else {
             super.prepare(for: segue, sender: sender)
         }

@@ -45,6 +45,7 @@ final class ImageListService {
                             welcomeDescription: photoResult.description,
                             thumbImageURL: photoResult.urls.thumb,
                             largeImageURL: photoResult.urls.full,
+                            fullImageUrl: photoResult.urls.full,
                             isLiked: photoResult.likedByUser
                         )
                     }
