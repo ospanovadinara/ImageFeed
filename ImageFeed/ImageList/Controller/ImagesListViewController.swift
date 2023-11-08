@@ -13,11 +13,10 @@ import Kingfisher
     private let ShowSingleImageSegueIdentifier = "ShowSingleImage"
     private let imageListService = ImageListService.shared
     private var photos: [Photo] = []
-     private var likedPhotoIds: Set<String> = []
+    private var likedPhotoIds: Set<String> = []
     private lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
-        formatter.dateStyle = .long
-        formatter.timeStyle = .none
+        formatter.dateFormat = "dd MMMM yyyy"
         return formatter
     }()
 
@@ -45,14 +44,19 @@ import Kingfisher
         imageListService.fetchPhotosNextPage()
     }
 
+     deinit {
+         NotificationCenter.default.removeObserver(self)
+     }
+
     override func prepare(
         for segue: UIStoryboardSegue,
         sender: Any?
     ) {
         if segue.identifier == ShowSingleImageSegueIdentifier {
-            let viewController = segue.destination as! SingleImageViewController
-            guard let indexPath = sender as? IndexPath else { return }
-            viewController.fullImageUrl = photos[indexPath.row].fullImageUrl
+            if let viewController = segue.destination as? SingleImageViewController,
+               let indexPath = sender as? IndexPath {
+                viewController.fullImageUrl = photos[indexPath.row].fullImageUrl
+            }
         } else {
             super.prepare(for: segue, sender: sender)
         }
@@ -84,30 +88,13 @@ extension ImagesListViewController: UITableViewDataSource {
 
         imageListCell.delegate = self
 
-        let image = photos[indexPath.row]
-
-        if let url = URL(string: image.thumbImageURL) {
-            imageListCell.cellImage.kf.indicatorType = .activity
-            imageListCell.cellImage.kf.setImage(
-                with: url,
-                placeholder: UIImage(named: "placeholder"),
-                options: []) { result in
-                    switch result {
-                    case .success(_):
-                        if let createdAt = image.createdAt {
-                            let dateFormatter = DateFormatter()
-                            dateFormatter.dateFormat = "dd MMMM yyyy"
-                            imageListCell.dateLabel.text = dateFormatter.string(from: createdAt)
-                        } else {
-                            imageListCell.dateLabel.text = "Дата неизвестна"
-                        }
-                        imageListCell.setIsLiked(image.isLiked)
-                        tableView.reloadRows(at: [indexPath], with: .automatic)
-                    case .failure(let error):
-                        print(error)
-                    }
-                }
+        imageListCell.imageLoadCompletion = { [weak tableView, indexPath] in
+            tableView?.reloadRows(at: [indexPath], with: .automatic)
         }
+        imageListCell.imageLoadFailure  = { error in
+            print("Error fetching photos: \(error)")
+        }
+        imageListCell.configCell(withPhoto: photos[indexPath.row])
         return imageListCell
     }
 }

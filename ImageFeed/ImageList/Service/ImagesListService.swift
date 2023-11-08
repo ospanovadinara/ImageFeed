@@ -75,12 +75,17 @@ final class ImageListService {
 
 extension ImageListService {
     private func makeFetchPhotosRequest(page: Int) -> URLRequest? {
-        guard let url = URL(string: "https://api.unsplash.com/photos?page=\(page)&per_page=\(perPage)"),
+        guard let baseUrl = DefaultBaseURL,
               let token = OAuth2TokenStorage.shared.token else {
             fatalError("Failed to create URL")
         }
-
-        var request = URLRequest(url: url)
+        let url = baseUrl.appendingPathComponent("photos")
+        var components = URLComponents(url: url, resolvingAgainstBaseURL: false)
+        components?.queryItems = [
+            URLQueryItem(name: "page", value: "\(page)"),
+            URLQueryItem(name: "per_page", value: "\(perPage)"),
+        ]
+        var request = URLRequest(url: components?.url ?? url)
 
         request.httpMethod = "GET"
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
