@@ -41,7 +41,7 @@ final class ImageListService {
                         return Photo(
                             id: photoResult.id,
                             size: CGSize(width: photoResult.width, height: photoResult.height),
-                            createdAt: Date(),
+                            createdAt: self.dateFormatter(photoResult.createdAt),
                             welcomeDescription: photoResult.description,
                             thumbImageURL: photoResult.urls.thumb,
                             largeImageURL: photoResult.urls.full,
@@ -65,6 +65,11 @@ final class ImageListService {
             }
         }
         task.resume()
+    }
+
+    private func dateFormatter(_ date: String) -> Date? {
+        let dateFormatter = ISO8601DateFormatter()
+        return dateFormatter.date(from: date)
     }
 }
 
