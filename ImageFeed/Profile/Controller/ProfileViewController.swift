@@ -8,6 +8,9 @@
 import UIKit
 import SnapKit
 import Kingfisher
+import WebKit
+import SwiftKeychainWrapper
+
 
 final class ProfileViewController: UIViewController {
     private let profileService = ProfileService.shared
@@ -153,6 +156,41 @@ final class ProfileViewController: UIViewController {
 
     // MARK: - Actions
     @objc private func exitButtonDidTap() {
-        print("Exit button tapped")
+        let alert = UIAlertController(title: "Пока, пока!",
+                                      message: "Уверены что хотите выйти?",
+                                      preferredStyle: .alert)
+
+        let approveAction = UIAlertAction(title: "Да", style: .default) { [weak self] _ in
+            guard let self = self else { return }
+            KeychainWrapper.standard.removeAllKeys()
+            self.clean()
+            self.goToSplashViewController()
+        }
+
+        let cancelAction = UIAlertAction(title: "Нет", style: .cancel)
+
+        alert.addAction(approveAction)
+        alert.addAction(cancelAction)
+
+        present(alert, animated: true, completion: nil)
+    }
+
+    private func clean() {
+       HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
+       WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in
+          records.forEach { record in
+             WKWebsiteDataStore.default().removeData(ofTypes: record.dataTypes, 
+                                                     for: [record],
+                                                     completionHandler: {})
+          }
+       }
+    }
+
+    private func goToSplashViewController() {
+        let viewController = SplashViewController()
+        guard let window = UIApplication.shared.windows.first else {
+            fatalError("Invalid Configuration")
+        }
+        window.rootViewController = viewController
     }
 }
