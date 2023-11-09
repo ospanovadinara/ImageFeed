@@ -6,37 +6,44 @@
 //
 
 import UIKit
+import ProgressHUD
+import Kingfisher
 
 final class SingleImageViewController: UIViewController {
-    var image: UIImage! {
+    var fullImageUrl: String?
+    var image: UIImage? {
         didSet {
-            guard isViewLoaded else { return }
-            imageView.image = image
-            rescaleAndCenterImageInScrollView(image: image)
+            if let image = image {
+                guard isViewLoaded else { return }
+                imageView.image = image
+                rescaleAndCenterImageInScrollView(image: image)
+            }
         }
     }
 
     // MARK: - UI
-    @IBOutlet var imageView: UIImageView!
-    @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak private var imageView: UIImageView!
+    @IBOutlet weak private var scrollView: UIScrollView!
+
 
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        showFullImage()
+
         scrollView.minimumZoomScale = 0.1
         scrollView.maximumZoomScale = 1.25
-        imageView.image = image
-        rescaleAndCenterImageInScrollView(image: image)
     }
 
     // MARK: - Actions
-    @IBAction func didTapBackButton(_ sender: UIButton) {
+    @IBAction private func didTapBackButton(_ sender: UIButton) {
         dismiss(animated: true, completion: nil)
     }
 
-    @IBAction func didTapShareButton(_ sender: UIButton) {
+    @IBAction private func didTapShareButton(_ sender: UIButton) {
+        guard let image = image else { return }
         let share = UIActivityViewController(
-            activityItems: [image!],
+            activityItems: [image],
             applicationActivities: nil
         )
         present(share, animated: true, completion: nil)
@@ -59,12 +66,45 @@ final class SingleImageViewController: UIViewController {
         let y = (newContentSize.height - visibleRectSize.height) / 2
         scrollView.setContentOffset(CGPoint(x: x, y: y), animated: false)
     }
+
+    private func showFullImage() {
+        if let imageUrl = fullImageUrl,
+           let url = URL(string: imageUrl) {
+            UIBlockingProgressHUD.show()
+            imageView.kf.setImage(with: url) { [weak self] result in
+                UIBlockingProgressHUD.dismiss()
+                guard let self = self else { return }
+                switch result {
+                case .success(let fullImage):
+                    self.image = fullImage.image
+                case .failure:
+                    self.showAlert()
+                }
+            }
+        }
+    }
+
+    private func showAlert() {
+        let alert = UIAlertController(title: "Ошибка",
+                                      message: "Что-то пошло не так. Попробовать ещё раз?",
+                                      preferredStyle: .alert)
+
+        let cancelAction = UIAlertAction(title: "Не надо", style: .cancel, handler: nil)
+        let tryAgainAction = UIAlertAction(title: "Повторить", style: .default) { [weak self] _ in
+            self?.showFullImage()
+        }
+
+        alert.addAction(cancelAction)
+        alert.addAction(tryAgainAction)
+
+        present(alert, animated: true, completion: nil)
+    }
 }
 
 // MARK: - UIScrollViewDelegate
 extension SingleImageViewController: UIScrollViewDelegate {
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
-        imageView
+        return imageView
     }
 }
 

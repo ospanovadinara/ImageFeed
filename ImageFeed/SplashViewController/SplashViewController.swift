@@ -41,14 +41,16 @@ final class SplashViewController: UIViewController {
             profileService.fetchProfile(token) { [weak self] result in
                 switch result {
                 case .success(_ ):
-                    self?.switchToTabBarController()
-                    if let username = self?.profileService.profile?.username {
-                        self?.profileImageService.fetchProfileImageURL(username: username) { result in
-                            switch result {
-                            case .success(let imageUrl):
-                                print("Avatar URL: \(imageUrl)")
-                            case .failure(_):
-                                self?.showAlert()
+                    DispatchQueue.main.async {
+                        self?.switchToTabBarController()
+                        if let username = self?.profileService.profile?.username {
+                            self?.profileImageService.fetchProfileImageURL(username: username) { result in
+                                switch result {
+                                case .success(let imageUrl):
+                                    print("Avatar URL: \(imageUrl)")
+                                case .failure(_):
+                                    self?.showAlert()
+                                }
                             }
                         }
                     }
@@ -83,9 +85,9 @@ final class SplashViewController: UIViewController {
 
 
     private func switchToTabBarController() {
-        guard let window = UIApplication.shared.windows.first else { fatalError("Invalid Configuration") }
         let tabBarController = UIStoryboard(name: "Main", bundle: .main)
             .instantiateViewController(withIdentifier: "TabBarViewController")
+        guard let window = UIApplication.shared.windows.first else { fatalError("Invalid Configuration") }
         window.rootViewController = tabBarController
     }
 
