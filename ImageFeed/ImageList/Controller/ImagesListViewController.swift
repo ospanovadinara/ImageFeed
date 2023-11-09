@@ -116,16 +116,9 @@ extension ImagesListViewController: UITableViewDelegate {
         _ tableView: UITableView,
         heightForRowAt indexPath: IndexPath
     ) -> CGFloat {
-
-        let defaultCellHeight: CGFloat = 252.0
-
-        guard indexPath.row < photos.count else {
-            return defaultCellHeight
+        guard let image = UIImage(named: "\(indexPath.row)") else {
+            return 0
         }
-
-        let image = photos[indexPath.row]
-
-        if let image = UIImage(named: image.thumbImageURL) {
             let imageInsets = UIEdgeInsets(top: 4,
                                            left: 16,
                                            bottom: 4,
@@ -135,9 +128,6 @@ extension ImagesListViewController: UITableViewDelegate {
             let scale = imageViewWidth / imageWidth
             let cellHeight = image.size.height * scale + imageInsets.top + imageInsets.bottom
             return cellHeight
-        } else {
-            return defaultCellHeight
-        }
     }
 
     func tableView(
