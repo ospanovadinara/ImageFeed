@@ -36,6 +36,6 @@ final class WebViewTests: XCTestCase {
         presenter.viewDidLoad()
 
         //then
-        XCTAssertTrue(viewController.loadRequestCalled) 
+        XCTAssertTrue(viewController.loadRequestCalled)
     }
 }
