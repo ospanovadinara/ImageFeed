@@ -32,6 +32,7 @@
 		275002662AFE6E6D008C3EA4 /* AuthHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275002652AFE6E6D008C3EA4 /* AuthHelper.swift */; };
 		2750026E2AFE74F3008C3EA4 /* WebViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2750026D2AFE74F3008C3EA4 /* WebViewTests.swift */; };
 		275002772AFE75D7008C3EA4 /* WebViewPresenterSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275002762AFE75D7008C3EA4 /* WebViewPresenterSpy.swift */; };
+		275002792AFE776E008C3EA4 /* WebViewViewControllerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275002782AFE776E008C3EA4 /* WebViewViewControllerSpy.swift */; };
 		276476BD2AD94E6700A5C0A5 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 276476BC2AD94E6700A5C0A5 /* Kingfisher */; };
 		27796C452AAEFD4400212E13 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27796C442AAEFD4400212E13 /* ProfileViewController.swift */; };
 		278F249B2ADB0704005B2049 /* ProfileImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278F249A2ADB0704005B2049 /* ProfileImageService.swift */; };
@@ -91,6 +92,7 @@
 		2750026B2AFE74F3008C3EA4 /* ImageFeedTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ImageFeedTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2750026D2AFE74F3008C3EA4 /* WebViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewTests.swift; sourceTree = "<group>"; };
 		275002762AFE75D7008C3EA4 /* WebViewPresenterSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewPresenterSpy.swift; sourceTree = "<group>"; };
+		275002782AFE776E008C3EA4 /* WebViewViewControllerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewViewControllerSpy.swift; sourceTree = "<group>"; };
 		27796C442AAEFD4400212E13 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		278F249A2ADB0704005B2049 /* ProfileImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageService.swift; sourceTree = "<group>"; };
 		278F249C2ADB0725005B2049 /* UserResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserResult.swift; sourceTree = "<group>"; };
@@ -262,6 +264,7 @@
 		2750026C2AFE74F3008C3EA4 /* ImageFeedTests */ = {
 			isa = PBXGroup;
 			children = (
+				275002782AFE776E008C3EA4 /* WebViewViewControllerSpy.swift */,
 				275002762AFE75D7008C3EA4 /* WebViewPresenterSpy.swift */,
 				2750026D2AFE74F3008C3EA4 /* WebViewTests.swift */,
 			);
@@ -526,6 +529,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2750026E2AFE74F3008C3EA4 /* WebViewTests.swift in Sources */,
+				275002792AFE776E008C3EA4 /* WebViewViewControllerSpy.swift in Sources */,
 				275002772AFE75D7008C3EA4 /* WebViewPresenterSpy.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
