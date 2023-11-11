@@ -288,7 +288,6 @@
 				278130EB2AFF7F9B00E5CCB6 /* ProfilePresenter.swift */,
 				2735A7A52AD6D07600B6D43C /* Model */,
 				279C42112AEF9F8D004DFB7D /* Controller */,
-				27796C442AAEFD4400212E13 /* ProfileViewController.swift */,
 				2735A7A62AD6D07F00B6D43C /* Service */,
 			);
 			path = Profile;
@@ -323,6 +322,7 @@
 		279C42112AEF9F8D004DFB7D /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				27796C442AAEFD4400212E13 /* ProfileViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
