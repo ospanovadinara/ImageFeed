@@ -211,7 +211,6 @@
 		270FAD142A9B748100511619 /* ImageFeed */ = {
 			isa = PBXGroup;
 			children = (
-				2735A79D2AD69D1B00B6D43C /* UIBlockingProgressHUD.swift */,
 				2723CBA42ACAAE8200B3C040 /* App */,
 				279C420F2AEF9D01004DFB7D /* TabBar */,
 				2708B1A02ACC71D800DF70D9 /* SplashViewController */,
@@ -296,6 +295,7 @@
 		279C420E2AEF9CE0004DFB7D /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				2735A79D2AD69D1B00B6D43C /* UIBlockingProgressHUD.swift */,
 				27E0F0402AE28C3500B5068A /* URLSessionExtension.swift */,
 				27E0F0442AE2AE8000B5068A /* URLRequest+Extension.swift */,
 			);
