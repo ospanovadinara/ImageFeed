@@ -25,6 +25,4 @@ final class ProfilePresenterSpy: ProfilePresenterProtocol {
     func clearAccount() {
         viewDidClearAccount = true
     }
-    
-
 }
