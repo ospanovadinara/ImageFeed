@@ -8,7 +8,7 @@
 import UIKit
 import Kingfisher
 
-final class ImagesListCell: UITableViewCell {
+public final class ImagesListCell: UITableViewCell {
     weak var delegate: ImagesListCellDelegate?
     
     static let reuseIdentifier = "ImagesListCell"
