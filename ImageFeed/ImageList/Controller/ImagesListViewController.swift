@@ -8,7 +8,12 @@
 import UIKit
 import Kingfisher
 
- final class ImagesListViewController: UIViewController {
+public protocol ImagesListViewControllerProtocol: AnyObject {
+    var presenter: ImagesListPresenterProtocol? { get set }
+}
+
+final class ImagesListViewController: UIViewController, ImagesListViewControllerProtocol {
+    var presenter: ImagesListPresenterProtocol?
 
     private let ShowSingleImageSegueIdentifier = "ShowSingleImage"
     private let imageListService = ImageListService.shared
@@ -44,9 +49,9 @@ import Kingfisher
         imageListService.fetchPhotosNextPage()
     }
 
-     deinit {
-         NotificationCenter.default.removeObserver(self)
-     }
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
 
     override func prepare(
         for segue: UIStoryboardSegue,
@@ -119,15 +124,15 @@ extension ImagesListViewController: UITableViewDelegate {
         guard let image = UIImage(named: "\(indexPath.row)") else {
             return 0
         }
-            let imageInsets = UIEdgeInsets(top: 4,
-                                           left: 16,
-                                           bottom: 4,
-                                           right: 16)
-            let imageViewWidth = tableView.bounds.width - imageInsets.left - imageInsets.right
-            let imageWidth = image.size.width
-            let scale = imageViewWidth / imageWidth
-            let cellHeight = image.size.height * scale + imageInsets.top + imageInsets.bottom
-            return cellHeight
+        let imageInsets = UIEdgeInsets(top: 4,
+                                       left: 16,
+                                       bottom: 4,
+                                       right: 16)
+        let imageViewWidth = tableView.bounds.width - imageInsets.left - imageInsets.right
+        let imageWidth = image.size.width
+        let scale = imageViewWidth / imageWidth
+        let cellHeight = image.size.height * scale + imageInsets.top + imageInsets.bottom
+        return cellHeight
     }
 
     func tableView(
@@ -149,7 +154,7 @@ extension ImagesListViewController: UITableViewDelegate {
         if oldCount != newCount {
             var indexPaths = [IndexPath]()
             tableView.performBatchUpdates {
-            indexPaths = (oldCount..<newCount).map { i in
+                indexPaths = (oldCount..<newCount).map { i in
                     IndexPath(row: i, section: 0)
                 }
                 tableView.insertRows(at: indexPaths, with: .automatic)
