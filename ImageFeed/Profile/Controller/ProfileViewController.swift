@@ -73,6 +73,7 @@ final class ProfileViewController: UIViewController {
         let button = UIButton()
         button.setImage(UIImage(named: "exit_button"), for: .normal)
         button.addTarget(self, action: #selector(exitButtonDidTap), for: .touchUpInside)
+        button.accessibilityIdentifier = "logout button"
         return button
     }()
 
@@ -153,12 +154,13 @@ private extension ProfileViewController {
         let alert = UIAlertController(title: "Пока, пока!",
                                       message: "Уверены что хотите выйти?",
                                       preferredStyle: .alert)
-
+        alert.view.accessibilityIdentifier = "Bye bye!"
         let approveAction = UIAlertAction(title: "Да", style: .default) { [weak self] _ in
             guard let self = self else { return }
             KeychainWrapper.standard.removeAllKeys()
             self.presenter?.clearAccount()
         }
+        approveAction.accessibilityIdentifier = "Yes"
 
         let cancelAction = UIAlertAction(title: "Нет", style: .cancel)
 
