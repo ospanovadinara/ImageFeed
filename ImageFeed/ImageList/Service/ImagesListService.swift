@@ -75,10 +75,10 @@ final class ImageListService {
 
 extension ImageListService {
     private func makeFetchPhotosRequest(page: Int) -> URLRequest? {
-        guard let baseUrl = DefaultBaseURL,
-              let token = OAuth2TokenStorage.shared.token else {
+        guard let token = OAuth2TokenStorage.shared.token else {
             fatalError("Failed to create URL")
         }
+        let baseUrl = DefaultBaseURL
         let url = baseUrl.appendingPathComponent("photos")
         var components = URLComponents(url: url, resolvingAgainstBaseURL: false)
         components?.queryItems = [

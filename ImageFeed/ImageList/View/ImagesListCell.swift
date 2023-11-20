@@ -8,7 +8,7 @@
 import UIKit
 import Kingfisher
 
-final class ImagesListCell: UITableViewCell {
+public final class ImagesListCell: UITableViewCell {
     weak var delegate: ImagesListCellDelegate?
     
     static let reuseIdentifier = "ImagesListCell"
@@ -29,12 +29,11 @@ final class ImagesListCell: UITableViewCell {
 
     func configCell(withPhoto photo: Photo) {
         if photo.isLiked {
-            if photo.isLiked {
-                self.likeButton.imageView?.image = UIImage(named: "like_active")
-            } else {
-                self.likeButton.imageView?.image = UIImage(named: "like_not_active")
-            }
+            self.likeButton.imageView?.image = UIImage(named: "like_active")
+        } else {
+            self.likeButton.imageView?.image = UIImage(named: "like_not_active")
         }
+
 
         if let url = URL(string: photo.thumbImageURL) {
             cellImage.kf.indicatorType = .activity
@@ -62,7 +61,7 @@ final class ImagesListCell: UITableViewCell {
 
 
     func setIsLiked(_ isLiked: Bool) {
-
+        self.likeButton.imageView?.image = isLiked ? UIImage(named: "like_active") : UIImage(named: "like_not_active")
     }
 }
 

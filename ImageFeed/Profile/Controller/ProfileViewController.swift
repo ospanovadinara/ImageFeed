@@ -11,12 +11,22 @@ import Kingfisher
 import WebKit
 import SwiftKeychainWrapper
 
+// MARK: - ProfileViewControllerProtocol
+public protocol ProfileViewControllerProtocol: AnyObject {
+    var presenter: ProfilePresenterProtocol? { get set }
+    func updateProfileDetails(_ profile: Profile?)
+    func updateAvatar(url: URL)
+}
 
+// MARK: - ProfileViewController
 final class ProfileViewController: UIViewController {
-    private let profileService = ProfileService.shared
+
+    // MARK: - Private Properties
     private var profileImageServiceObserver: NSObjectProtocol?
-    private let profileImageService = ProfileImageService.shared
     private var profile: Profile?
+
+    // MARK: - Public Properties
+    var presenter: ProfilePresenterProtocol?
 
     // MARK: - UI
     private lazy var avatarImage: UIImageView = {
@@ -63,6 +73,7 @@ final class ProfileViewController: UIViewController {
         let button = UIButton()
         button.setImage(UIImage(named: "exit_button"), for: .normal)
         button.addTarget(self, action: #selector(exitButtonDidTap), for: .touchUpInside)
+        button.accessibilityIdentifier = "logout button"
         return button
     }()
 
@@ -72,29 +83,15 @@ final class ProfileViewController: UIViewController {
         view.backgroundColor = UIColor(named: "YP Black")
         setupViews()
         setupConstraints()
-
-        if let url = profileImageService.avatarURL {
-            updateAvatar(url: url)
-        }
-
-        profileImageServiceObserver = NotificationCenter.default
-            .addObserver(
-                forName: ProfileImageService.didChangeNotification,
-                object: nil,
-                queue: .main
-            ) { [weak self] notification in
-                self?.updateAvatar(notification: notification)
-            }
+        presenter?.viewDidLoad()
+        configureNotificationObserver()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if let profile = profileService.profile {
-            updateProfileDetails(profile: profile)
-        } else {
-            assertionFailure("No saved profile")
-        }
+        presenter?.viewWillAppear()
     }
+
 
     // MARK: - Setup Views
     private func setupViews() {
@@ -104,7 +101,7 @@ final class ProfileViewController: UIViewController {
         ].forEach { labelStackView.addArrangedSubview($0) }
 
         [avatarImage,
-        exitButton,
+         exitButton,
          labelStackView
         ].forEach { view.addSubview($0) }
     }
@@ -128,9 +125,10 @@ final class ProfileViewController: UIViewController {
             make.leading.equalToSuperview().offset(16)
         }
     }
+}
 
-    @objc
-    private func updateAvatar(notification: Notification) {
+private extension ProfileViewController {
+    @objc func updateAvatar(notification: Notification) {
         guard
             isViewLoaded,
             let userInfo = notification.userInfo,
@@ -140,32 +138,29 @@ final class ProfileViewController: UIViewController {
         updateAvatar(url: url)
     }
 
-    private func updateAvatar(url: URL) {
-        avatarImage.kf.indicatorType = .activity
-        let processor = RoundCornerImageProcessor(cornerRadius: 61)
-        avatarImage.kf.setImage(with: url,
-                                options: [
-                                .processor(processor)])
-    }
-
-    private func updateProfileDetails(profile: Profile) {
-            nameLabel.text = profile.name
-            userNameLabel.text = profile.loginName
-            statusLabel.text = profile.bio
+    func configureNotificationObserver() {
+        profileImageServiceObserver = NotificationCenter.default
+            .addObserver(
+                forName: ProfileImageService.didChangeNotification,
+                object: nil,
+                queue: .main
+            ) { [weak self] notification in
+                self?.updateAvatar(notification: notification)
+            }
     }
 
     // MARK: - Actions
-    @objc private func exitButtonDidTap() {
+    @objc func exitButtonDidTap() {
         let alert = UIAlertController(title: "Пока, пока!",
                                       message: "Уверены что хотите выйти?",
                                       preferredStyle: .alert)
-
+        alert.view.accessibilityIdentifier = "Bye bye!"
         let approveAction = UIAlertAction(title: "Да", style: .default) { [weak self] _ in
             guard let self = self else { return }
             KeychainWrapper.standard.removeAllKeys()
-            self.clean()
-            self.goToSplashViewController()
+            self.presenter?.clearAccount()
         }
+        approveAction.accessibilityIdentifier = "Yes"
 
         let cancelAction = UIAlertAction(title: "Нет", style: .cancel)
 
@@ -174,23 +169,26 @@ final class ProfileViewController: UIViewController {
 
         present(alert, animated: true, completion: nil)
     }
+}
 
-    private func clean() {
-       HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
-       WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in
-          records.forEach { record in
-             WKWebsiteDataStore.default().removeData(ofTypes: record.dataTypes, 
-                                                     for: [record],
-                                                     completionHandler: {})
-          }
-       }
-    }
-
-    private func goToSplashViewController() {
-        let viewController = SplashViewController()
-        guard let window = UIApplication.shared.windows.first else {
-            fatalError("Invalid Configuration")
+extension ProfileViewController: ProfileViewControllerProtocol {
+    func updateProfileDetails(_ profile: Profile?) {
+        if let profile {
+            nameLabel.text = profile.name
+            userNameLabel.text = profile.loginName
+            statusLabel.text = profile.bio
+        } else {
+            nameLabel.text = ""
+            userNameLabel.text = ""
+            statusLabel.text = ""
         }
-        window.rootViewController = viewController
+    }
+    
+    func updateAvatar(url: URL) {
+        avatarImage.kf.indicatorType = .activity
+        let processor = RoundCornerImageProcessor(cornerRadius: 61)
+        avatarImage.kf.setImage(with: url,
+                                options: [
+                                    .processor(processor)])
     }
 }
