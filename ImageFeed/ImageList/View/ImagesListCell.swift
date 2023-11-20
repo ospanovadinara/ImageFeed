@@ -61,11 +61,7 @@ public final class ImagesListCell: UITableViewCell {
 
 
     func setIsLiked(_ isLiked: Bool) {
-        if isLiked {
-            self.likeButton.imageView?.image = UIImage(named: "like_active")
-        } else {
-            self.likeButton.imageView?.image = UIImage(named: "like_not_active")
-        }
+        self.likeButton.imageView?.image = isLiked ? UIImage(named: "like_active") : UIImage(named: "like_not_active")
     }
 }
 
