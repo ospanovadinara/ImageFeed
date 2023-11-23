@@ -4,6 +4,13 @@
 
 - [Unsplash API](https://unsplash.com/documentation)
 
+# Дизайн
+
+<img width="181" alt="Splash Screen" src="https://github.com/ospanovadinara/ImageFeed/assets/136311088/215d5dba-51e4-4ac6-9736-4f10e2e12243"> 
+
+<img width="155" alt="Authorization Screen" src="https://github.com/ospanovadinara/ImageFeed/assets/136311088/dd80f586-6c8b-4e4c-a25d-66498bf45753">
+
+
 # Назначение и цели приложения
 
 Многостраничное приложение предназначено для просмотра изображений через API Unsplash.
