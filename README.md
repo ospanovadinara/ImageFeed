@@ -6,19 +6,7 @@
 
 # Дизайн
 
-<img width="181" alt="Splash Screen" src="https://github.com/ospanovadinara/ImageFeed/assets/136311088/215d5dba-51e4-4ac6-9736-4f10e2e12243"> 
-
-<img width="155" alt="Authorization Screen" src="https://github.com/ospanovadinara/ImageFeed/assets/136311088/dd80f586-6c8b-4e4c-a25d-66498bf45753">
-
-<img width="157" alt="Unsplash Web Screen" src="https://github.com/ospanovadinara/ImageFeed/assets/136311088/80a63932-c6a6-418a-8c39-8c9828ff74f1">
-
-<img width="124" alt="Image Feed Screen" src="https://github.com/ospanovadinara/ImageFeed/assets/136311088/bc4ea7e5-ac2f-41cf-8163-14f074c26719">
-
-<img width="126" alt="Loader" src="https://github.com/ospanovadinara/ImageFeed/assets/136311088/7c54bcc1-ff0f-4be1-aa88-846aef5ba834">
-
-<img width="151" alt="Profile Screen" src="https://github.com/ospanovadinara/ImageFeed/assets/136311088/d1fababf-31ad-4100-8f30-9d1d5f4cb44f">
-
-<img width="150" alt="Single Image Screen" src="https://github.com/ospanovadinara/ImageFeed/assets/136311088/272dde92-69f7-4069-b107-4dcb3376bdfa">
+<img width="181" alt="Splash Screen" src="https://github.com/ospanovadinara/ImageFeed/assets/136311088/215d5dba-51e4-4ac6-9736-4f10e2e12243"><img width="155" alt="Authorization Screen" src="https://github.com/ospanovadinara/ImageFeed/assets/136311088/dd80f586-6c8b-4e4c-a25d-66498bf45753"><img width="157" alt="Unsplash Web Screen" src="https://github.com/ospanovadinara/ImageFeed/assets/136311088/80a63932-c6a6-418a-8c39-8c9828ff74f1"><img width="124" alt="Image Feed Screen" src="https://github.com/ospanovadinara/ImageFeed/assets/136311088/bc4ea7e5-ac2f-41cf-8163-14f074c26719"><img width="126" alt="Loader" src="https://github.com/ospanovadinara/ImageFeed/assets/136311088/7c54bcc1-ff0f-4be1-aa88-846aef5ba834"><img width="151" alt="Profile Screen" src="https://github.com/ospanovadinara/ImageFeed/assets/136311088/d1fababf-31ad-4100-8f30-9d1d5f4cb44f"><img width="150" alt="Single Image Screen" src="https://github.com/ospanovadinara/ImageFeed/assets/136311088/272dde92-69f7-4069-b107-4dcb3376bdfa">
 
 # Назначение и цели приложения
 
