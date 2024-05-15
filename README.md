@@ -4,22 +4,6 @@
 
 - [Unsplash API](https://unsplash.com/documentation)
 
-# Дизайн
-
-<img width="150" alt="Splash Screen" src="https://github.com/ospanovadinara/ImageFeed/assets/136311088/215d5dba-51e4-4ac6-9736-4f10e2e12243">
-
-<img width="150" alt="Authorization Screen" src="https://github.com/ospanovadinara/ImageFeed/assets/136311088/dd80f586-6c8b-4e4c-a25d-66498bf45753">
-
-<img width="150" alt="Unsplash Web Screen" src="https://github.com/ospanovadinara/ImageFeed/assets/136311088/80a63932-c6a6-418a-8c39-8c9828ff74f1">
-
-<img width="150" alt="Image Feed Screen" src="https://github.com/ospanovadinara/ImageFeed/assets/136311088/bc4ea7e5-ac2f-41cf-8163-14f074c26719">
-
-<img width="150" alt="Loader" src="https://github.com/ospanovadinara/ImageFeed/assets/136311088/7c54bcc1-ff0f-4be1-aa88-846aef5ba834">
-
-<img width="151" alt="Profile Screen" src="https://github.com/ospanovadinara/ImageFeed/assets/136311088/d1fababf-31ad-4100-8f30-9d1d5f4cb44f">
-
-<img width="150" alt="Single Image Screen" src="https://github.com/ospanovadinara/ImageFeed/assets/136311088/272dde92-69f7-4069-b107-4dcb3376bdfa">
-
 # Назначение и цели приложения
 
 Многостраничное приложение предназначено для просмотра изображений через API Unsplash.
@@ -144,3 +128,30 @@
     2. Если пользователь нажимает «Нет», то он возвращается на экран профиля;
     3. Если алерт не настроен, то при нажатии на кнопку выходы ничего не происходит, пользователь не может разлогиниться;
 3. Пользователь может переключаться между экранами ленты и профиля с помощью таб бара.
+
+# Скрины
+
+# Экран авторизации 
+
+<img width="514" alt="Снимок экрана 2024-05-15 в 14 28 13" src="https://github.com/ospanovadinara/ImageFeed/assets/136311088/b255062e-84cf-4660-a076-e3cf004d9eb1">
+
+<img width="514" alt="Снимок экрана 2024-05-15 в 14 28 19" src="https://github.com/ospanovadinara/ImageFeed/assets/136311088/ef03e4d6-46d5-47ca-bf10-92eb30870496">
+
+# Экран ленты
+
+<img width="514" alt="Снимок экрана 2024-05-15 в 14 27 25" src="https://github.com/ospanovadinara/ImageFeed/assets/136311088/8f50c810-760c-43cf-90fb-e96754485652">
+
+# Экран просмотра изображения на весь экран
+
+<img width="514" alt="Снимок экрана 2024-05-15 в 14 27 42" src="https://github.com/ospanovadinara/ImageFeed/assets/136311088/54ba014d-39de-44c9-a157-347596cd9ba2">
+
+<img width="514" alt="Снимок экрана 2024-05-15 в 14 27 52" src="https://github.com/ospanovadinara/ImageFeed/assets/136311088/eea3c561-7f35-4c9d-a621-2dec81ba7e62">
+
+# Экран Профиля 
+
+<img width="514" alt="Снимок экрана 2024-05-15 в 14 28 00" src="https://github.com/ospanovadinara/ImageFeed/assets/136311088/731d26ff-e305-440f-b256-94ed21ab7f50">
+
+
+
+
+
